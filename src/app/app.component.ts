@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavComponent } from './components/nav/nav.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  imports: [RouterOutlet, NavComponent],
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'SAMs-FoodTruck-Client';
+  title = 'SAMs-Food Truck';
 }

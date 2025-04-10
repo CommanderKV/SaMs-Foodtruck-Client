@@ -1,24 +1,22 @@
-<p>order works!</p>
-<form (ngSubmit)="createOrder()">
-    <div>
-        <label for="cartId">Cart ID:</label>
-        <input type="number" id="cartId" [(ngModel)]="cartId" name="cartId" required />
-    </div>
-    <div>
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required />
-    </div>
-    <div>
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" required />
-    </div>
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" [(ngModel)]="email" name="email" />
-    </div>
-    <div>
-        <label for="phone">Phone Number:</label>
-        <input type="text" id="phone" [(ngModel)]="phone" name="phone" />
-    </div>
-    <button type="submit">Create Order</button>
-</form>
+<h1>Create an Order</h1>
+<fieldset>
+    <label for="cartId">Cart ID:</label>
+    <input type="number" id="cartId" [(ngModel)]="cartId" name="cartId" required />
+</fieldset>
+<fieldset>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required />
+</fieldset>
+<fieldset>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" required />
+</fieldset>
+<fieldset>
+    <label for="email">Email:</label>
+    <input type="email" id="email" [(ngModel)]="email" name="email" />
+</fieldset>
+<fieldset>
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" [(ngModel)]="phone" name="phone" />
+</fieldset>
+<button (click)="createOrder()">Create Order</button>

@@ -34,10 +34,17 @@ export class OrderComponent {
     }
 
     // Call the service to create the order
-    this.service.createOrder(order).subscribe((response: any) => {
-      // Handle the response from the server
-      console.log(response);
-      alert("Order Created Successfully!");
+    this.service.createOrder(order).subscribe({
+      next: (response: any) => {
+        // Handle redirecting the user to the order confirmation page
+        console.log(response);
+        window.location.href = response.url;
+      },
+      error: (err) => {
+        // Handle the error response from the server
+        console.error(err);
+        alert("Error creating order. Please try again.");
+      }
     });
 
   }

@@ -1,0 +1,24 @@
+<h1>Create a cart</h1>
+
+<fieldset>
+    <label for="orderTotal">Order total:</label>
+    <input type="number" id="orderTotal" [(ngModel)]="orderTotal" required>
+</fieldset>
+<fieldset>
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" [(ngModel)]="userId" required>
+</fieldset>
+
+<button (click)="createCart()">Create Cart</button>
+
+
+<fieldset>
+    <label for="cartId">Cart ID:</label>
+    <input type="text" id="cartId" [(ngModel)]="cartId" required>
+</fieldset>
+<fieldset>
+    <label for="productId">ProductOrder ID:</label>
+    <input type="text" id="productId" [(ngModel)]="productOrderId" required>
+</fieldset>
+
+<button (click)="addProductOrder()">Add Product Order</button>

@@ -1,1 +1,18 @@
-<p>product-orders works!</p>
+<h1>Create a product Order</h1>
+
+<fieldset>
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" [(ngModel)]="quantity" name="quantity" required>
+</fieldset>
+
+<fieldset>
+    <label for="price">Price:</label>
+    <input type="number" id="price" [(ngModel)]="price" name="price" required>
+</fieldset>
+
+<fieldset>
+    <label for="productId">Product ID:</label>
+    <input type="number" id="productId" [(ngModel)]="productId" name="productId" required>
+</fieldset>
+
+<button (click)="createProductOrder()">Create Product Order</button>

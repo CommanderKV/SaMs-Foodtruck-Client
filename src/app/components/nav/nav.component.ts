@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 export class NavComponent implements OnInit {
   // Set the data for the nav bar
   username: string | undefined;
+  cartCount: number = 0;
 
   // Inject the authorization service
   constructor(private service: AuthService) {}

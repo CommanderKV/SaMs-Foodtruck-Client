@@ -2,11 +2,13 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 60px;
-    width: 100%;
+    height: var(--navbar-height, 60px);
+    width: var(--navbar-width, 100%);   
+    margin: var(--navbar-margin, 10px);
 }
 
-.navbar-start {
+.navbar-start,
+.navbar-end {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -14,26 +16,53 @@
 }
 
 .navbar-item {
-    text-decoration: none;
-    color: #fff;
-    font-size: 16px;
-    padding: 10px 15px;
-    margin: 0 5px;
-    border-radius: 5px;
-    background-color: #007bff;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    height: -webkit-fill-available; 
+
+    padding: 1vw 1vw;
+    margin: 0 .2vw;
+
+    font-size: var(--navbar-item-font-size, 2vw);
+    border-radius: 10px;
+
     cursor: pointer;
     border: none;
-    display: inline-block;
     text-align: center;
+
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.navbar-item:has(svg) {
+    padding: 10px 15px;
 }
 .navbar-item:hover {
-    background-color: #0056b3;
+    background-color: var(--navbar-item-hover-bg-color, #da00004d);
     transform: scale(1.05);
 }
 
 svg {
     color: #C900FF;
-    height: fill-available;
+    height: 100%;
     width: auto;
+}
+
+.icon {
+    display: inline-block;
+    position: relative;
+    height: 100%;
+}
+.badge {
+    position: absolute;
+    font-size: var(--navbar-item-badge-font-size, 15px);
+    background-color: var(--navbar-item-badge-bg-color, #000000);
+    color: var(--navbar-item-badge-color, #C900FF);
+    border-radius: var(--navbar-item-badge-border-radius, 100%);
+    padding: 0.2em 0.5em;
+    top: -0.5em;
+    right: -0.5em;
 }

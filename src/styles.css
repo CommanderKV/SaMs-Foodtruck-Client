@@ -1,4 +1,20 @@
+:root {
+    --navbar-height: 60px;
+    --navbar-width: 100%;
+    --navbar-margin: 10px;
+    /** Responsive font size based on view width */
+    --navbar-item-font-size: 2vw; 
+    --navbar-item-hover-bg-color: #da00004d;
+    --navbar-item-badge-font-size: 15px;
+    --navbar-item-badge-bg-color: #000000;
+    --navbar-item-badge-color: #C900FF;
+    --navbar-item-badge-border-radius: 100%;
+}
+
 body {
     background-color: #000000;
     color: #ffffff;
+    padding: 0px;
+    margin: 0px;
+    font-family: "Inter", sans-serif;
 }

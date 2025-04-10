@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,12 +9,20 @@ import { environment } from '../../../environments/environment';
 })
 export class LoginComponent {
 
-  // Get the server url from the environment file
-  serverUrl: string = environment.serverUrl;
+  // Inject the auth service to use the login function
+  constructor(private authService: AuthService) {}
 
-  googleLogin() {
-    // Send user to the login
-    window.location.href = `${this.serverUrl}/user/google`
+  // Google login
+  google(): void {
+    // Call the login function for google
+    this.authService.googleLogin().subscribe({
+      next: response => {
+        console.log('Login successful:', response);
+      },
+      error: error => {
+        console.error('Login failed:', error);
+      }
+    });
   }
 
 }

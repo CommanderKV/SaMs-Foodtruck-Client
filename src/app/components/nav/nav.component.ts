@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-nav',
@@ -15,13 +16,18 @@ export class NavComponent implements OnInit {
   cartCount: number = 0;
 
   // Inject the authorization service
-  constructor(private service: AuthService) {}
+  constructor(private service: AuthService, private cartService: CartService) {}
 
 
   ngOnInit(): void {
     // Check auth service for global username
     this.service.username.subscribe((username) => {
       this.username = username;
+    })
+
+    // Check cart service for global cart count
+    this.cartService.cartCount.subscribe((count) => {
+      this.cartCount = count;
     })
   }
 

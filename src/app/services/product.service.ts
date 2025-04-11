@@ -18,4 +18,9 @@ export class ProductService {
   createProduct(product: any) {
     return this.http.post(`${this.serverUrl}/products/create`, product);
   }
+
+  // Method to get all products
+  getProducts() {
+    return this.http.get(`${this.serverUrl}/products`);
+  }
 }

@@ -1,49 +1,92 @@
-import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { NgClass } from '@angular/common';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-menu',
-  imports: [ NgFor, NgClass ],
+  imports: [ NgFor, NgClass, NgIf ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
+  // Example location
   location: string = "Victoria Park Station";
 
   // Example menu items
-  menuItems: {category: string, items: {imageUrl: string, name: string, price: number, description: string}[]}[] = [
-    {
-      category: "Burgers",
-      items: [
-        {imageUrl: "imgs/logo.png", name: "Cheeseburger", price: 10.99, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Bacon Burger", price: 12.99, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Bacon Burger", price: 12.99, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-      ]
-    },
-    {
-      category: "Drinks",
-      items: [
-        {imageUrl: "imgs/logo.png", name: "Cola", price: 1.99, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Lemonade", price: 2.49, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Lemonade", price: 2.49, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Lemonade", price: 2.49, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Lemonade", price: 2.49, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-      ]
-    },
-    {
-      category: "Sides",
-      items: [
-        {imageUrl: "imgs/logo.png", name: "Fries", price: 3.99, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Onion Rings", price: 4.49, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-      ]
-    },
-    {
-      category: "Desserts",
-      items: [
-        {imageUrl: "imgs/logo.png", name: "Ice Cream", price: 2.99, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {imageUrl: "imgs/logo.png", name: "Brownie", price: 3.49, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-      ]
-    }
-  ]
+  menuItems: {category: string, items: {imageUrl: string, name: string, price: number, description: string}[]}[] | null = null;
+
+
+  // Inject the ProductService dependency into the component
+  constructor(private productService: ProductService) { }
+
+  // Load the products
+  ngOnInit() {
+    this.productService.getProducts().subscribe({
+      next: (data: any) => {
+        // Make sure it was a success
+        if (data.status != "success") {
+          console.log("Error: " + data.error);
+          return;
+        }
+
+        // Get the return from the server
+        let products = data.data;
+
+        // Check if there are any products
+        if (products.length == 0) {
+          console.log("No products found");
+          return;
+        }
+
+        // Go through the products and add them to the menu items
+        for (let i = 0; i < products.length; i++) {
+          // Get the product
+          let product = products[i];
+
+          // Get the categories
+          let categories = product.catefories;
+          if (categories.length == 0) {
+            // Make a category called Miscellaneous
+            categories = [{name: "Miscellaneous"}];
+          }
+
+          // Add the product to the menu
+          for (let j = 0; j < categories.length; j++) {
+            // Get the category name
+            let categoryName = categories[j].name;
+
+            // Check if the category already exists
+            let categoryIndex = -1;
+            if (this.menuItems !== null) {
+              categoryIndex = this.menuItems.findIndex((item) => item.category === categoryName);
+            } else {
+              this.menuItems = [];
+            }
+            if (categoryIndex == -1) {
+              // Create a new category
+              this.menuItems.push({
+                category: categoryName,
+                items: []
+              });
+
+              // Update index
+              categoryIndex = this.menuItems.length - 1;
+            }
+
+            // Add the product to the category
+            this.menuItems[categoryIndex].items.push({
+              imageUrl: product.photo,
+              name: product.name,
+              price: product.price,
+              description: product.description
+            });
+          }
+        }
+      },
+      error: (error: any) => {
+        console.log("Error: " + error);
+      }
+    });
+  }
 }

@@ -1,5 +1,5 @@
 <div class="header">
-    <img class="background-image" />
+    <img class="background-image" src="imgs/logo.png"/>
     <div class="main-content">
         <h1 class="title">SaM's Menu</h1>
         <h2>WHERE FLAVOR IS OUR SPECIALTY</h2>
@@ -19,17 +19,16 @@
     </div>
     <section class="menu-section" *ngFor="let category of menuItems">
         <h2>{{ category.category }}</h2>
-        <div class="menu-items">
-            <div class="menu-item" *ngFor="let item of category.items">
+        <ul [ngClass]="category.items.length <= 3 ? 'menu-items' : 'menu-items more-cols'">
+            <li class="menu-item" *ngFor="let item of category.items">
                 <img class="menu-item-image" [src]="item.imageUrl" alt="{{ item.name }}" />
                 <div class="menu-item-details">
                     <div class="menu-item-title">
-                        <h3>{{ item.name }}</h3>
-                        <span class="price">${{ item.price.toFixed(2) }}</span>
+                        <h3>{{ item.name }}<span class="price">{{ item.price.toFixed(2) }}</span></h3>
                     </div>
                     <p class="menu-item-description">{{ item.description }}</p>
                 </div>
-            </div>
-        </div>
+            </li>
+        </ul>
     </section>
 </section>

@@ -13,6 +13,11 @@ import { MenuComponent } from './components/menu/menu.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 
+////////////////////////////////////
+//  Import authorization service  //
+////////////////////////////////////
+import { AuthGaurdService } from './services/auth-gaurd.service';
+
 export const routes: Routes = [
     { path: "", component: HomeComponent },
     { path: "order", component: OrderComponent },
@@ -22,5 +27,5 @@ export const routes: Routes = [
     { path: "product", component: ProductComponent },
     { path: "menu", component: MenuComponent },
     { path: "dashboard", component: DashboardComponent },
-    { path: "admin", component: AdminComponent },
+    { path: "admin", component: AdminComponent, canActivate: [AuthGaurdService] },
 ];

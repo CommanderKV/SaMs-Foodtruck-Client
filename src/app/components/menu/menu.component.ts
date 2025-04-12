@@ -2,16 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { NgClass } from '@angular/common';
 import { ProductService } from '../../services/product.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-menu',
-  imports: [ NgFor, NgClass, NgIf ],
+  imports: [ NgFor, NgClass, NgIf, FormsModule ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
 export class MenuComponent implements OnInit {
   // Example location
   location: string = "Victoria Park Station";
+
+  // Search text
+  searchItem: string = "";
 
   // Example menu items
   menuItems: {category: string, items: {imageUrl: string, name: string, price: number, description: string}[]}[] | null = null;

@@ -30,5 +30,4 @@ export class NavComponent implements OnInit {
       this.cartCount = count;
     })
   }
-
 }

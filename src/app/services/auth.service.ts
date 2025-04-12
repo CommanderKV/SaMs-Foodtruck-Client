@@ -14,7 +14,7 @@ export class AuthService {
   private usernameSource = new BehaviorSubject<string | undefined>(undefined);
   username = this.usernameSource.asObservable();
 
-  private roleSource = new BehaviorSubject<string | undefined>(undefined);
+  private roleSource = new BehaviorSubject<string>("user");
   role = this.roleSource.asObservable();
 
   // Update the global username
@@ -39,21 +39,23 @@ export class AuthService {
 
   // Remove the global role on logout
   clearRole(): void {
-    this.roleSource.next(undefined);
+    this.roleSource.next("user");
   }
 
   // Update the user data
-  updateData() {
+  updateData(): void {
     // Get the user data from the server
-    return this.http.get(`${this.serverUrl}/user`, { withCredentials: true }).subscribe({
+    this.http.get(`${this.serverUrl}/user`, { withCredentials: true }).subscribe({
       next: (response: any) => {
-        // If the response is successful, set the username
-        if (response && response.data.displayName) {
-          this.setUsername(response.data.displayName);
-          this.setRole(response.data.role);
-        } else {
+        // Check if fail
+        if (response && response.status === "failure") {
           this.clearUsername();
           this.clearRole();
+        
+        // If the response is successful, set the username
+        } else  {
+          this.setUsername(response.data.displayName);
+          this.setRole(response.data.role);
         }
       },
       error: () => {
@@ -66,6 +68,11 @@ export class AuthService {
 
   // Inject the HTTP client to make API calls
   constructor(private http: HttpClient) {}
+
+  getRoleRaw() {
+    // Get the user data from the server
+    return this.http.get(`${this.serverUrl}/user`, { withCredentials: true });
+  }
 
   // Google login function
   googleLogin() {

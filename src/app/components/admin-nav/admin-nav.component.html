@@ -1,1 +1,12 @@
-<p>admin-nav works!</p>
+<nav class="admin-nav">
+    <div class="admin-nav-header">
+        <h1 class="title">SaM's Lunchbox</h1>
+        <h2 class="username">{{ username }}</h2>
+    </div>
+    <ul class="admin-nav-options">
+        <li class="admin-nav-item"><a class="nav-item" routerLink="/admin">Dashboard</a></li>
+        <li class="admin-nav-item"><a class="nav-item" routerLink="/admin/orders">Orders</a></li>
+        <li class="admin-nav-item"><a class="nav-item" routerLink="/admin/invin">Inventory</a></li>
+        <li class="admin-nav-item"><a class="nav-item" routerLink="/admin/menu">Menu</a></li>
+    </ul>
+</nav>

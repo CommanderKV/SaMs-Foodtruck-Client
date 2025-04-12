@@ -1,0 +1,62 @@
+.admin-nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    padding: 0px;
+
+    width: 25%;
+    height: 100vh;
+    background-color: #FFFFFF;
+    color: #000000;
+}
+.admin-nav .admin-nav-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.admin-nav .title {
+    margin: 0px;
+    margin-top: 10px;
+    color: #DA0000;
+    font-size: 2.5vw;
+    font-weight: bold;
+}
+.admin-nav .username {
+    margin: 0px;
+    font-size: 1.5vw;
+}
+.admin-nav .admin-nav-options {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+.admin-nav .admin-nav-options .admin-nav-item {
+    padding: 5px 10px;
+
+    border-radius: 10px;
+    border: none;
+
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.admin-nav .admin-nav-options .admin-nav-item:hover {
+    background-color: #DA00004D;
+    transform: scale(1.05);
+}
+.admin-nav .admin-nav-options .nav-item {
+    text-decoration: none;
+    font-size: 2.25vw;
+    color: #000000;
+
+}

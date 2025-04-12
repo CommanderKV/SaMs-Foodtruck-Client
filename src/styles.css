@@ -24,3 +24,42 @@ body {
     margin: 0px;
     font-family: "Inter", sans-serif;
 }
+
+.container-25-75 {
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 75%;
+    height: fit-content;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: var(--menu-search-bar-width, 50%);
+    padding: 20px;
+
+    background-color: #FFFFFF;
+    
+    border-radius: 100px;
+    border-color: #C900FF;
+    border-width: 5px;
+    border-style: solid;
+}
+.search-bar input {
+    width: 90%;
+    border: none;
+    color: #000000;
+    font-size: 2vw;
+    margin-left: 20px;
+    margin-right: 10px;
+}
+.search-bar input:focus {
+    outline: none;
+}
+.search-bar .search-icon {
+    width: 5%;
+    height: 100%;
+}

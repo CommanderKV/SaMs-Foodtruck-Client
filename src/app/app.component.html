@@ -1,4 +1,5 @@
-<app-nav></app-nav>
+<app-nav *ngIf="!admin"></app-nav>
+<app-admin-nav *ngIf="admin"></app-admin-nav>
 
 <main class="container">
 	<router-outlet></router-outlet>

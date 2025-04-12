@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [ NgIf ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  // Login or signup
+  login: boolean = true;
 
   // Inject the auth service to use the login function
   constructor(private authService: AuthService) {}
@@ -15,14 +18,7 @@ export class LoginComponent {
   // Google login
   google(): void {
     // Call the login function for google
-    this.authService.googleLogin().subscribe({
-      next: response => {
-        console.log('Login successful:', response);
-      },
-      error: error => {
-        console.error('Login failed:', error);
-      }
-    });
+    this.authService.googleLogin();
   }
 
 }

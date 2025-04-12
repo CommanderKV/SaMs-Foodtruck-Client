@@ -3,10 +3,11 @@ import { NgFor, NgIf } from '@angular/common';
 import { NgClass } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { FormsModule } from '@angular/forms';
+import { NavComponent } from '../nav/nav.component';
 
 @Component({
   selector: 'app-menu',
-  imports: [ NgFor, NgClass, NgIf, FormsModule ],
+  imports: [ NgFor, NgClass, NgIf, FormsModule, NavComponent ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })

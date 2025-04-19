@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-photo-upload',
@@ -12,6 +12,19 @@ export class PhotoUploadComponent {
 
   // Setup the base64 image string which can be returned
   @Output() base64String = new EventEmitter<string>();
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes["photoURL"]) {
+      // Check if the photoURL is not empty
+      if (this.photoURL) {
+        // Set the photoURL to the input value
+        this.photoURL = changes["photoURL"].currentValue;
+      } else {
+        // Set the photoURL to the default value
+        this.photoURL = 'imgs/logo.png';
+      }
+    }
+  }
 
   // When a file is selected convert it to base64 string
   onFileSelected(event: Event): void {

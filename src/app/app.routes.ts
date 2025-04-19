@@ -31,4 +31,5 @@ export const routes: Routes = [
     { path: "admin", component: AdminComponent, canActivate: [AuthGaurdService] },
     { path: "admin/invin", component: InventoryComponent, canActivate: [AuthGaurdService] },
     { path: "admin/createIngredient", component: CreateIngredientComponent, canActivate: [AuthGaurdService] },
+    { path: "admin/createIngredient", component: CreateIngredientComponent, canActivate: [AuthGaurdService] },
 ];

@@ -18,6 +18,7 @@ export class CreateIngredientComponent {
   currentStock: number = 0;
   photo: string | undefined = undefined;
   photoUrl: string = 'imgs/logo.png';
+  price: number = 0;
 
   editing: boolean = false;
 
@@ -34,6 +35,8 @@ export class CreateIngredientComponent {
       description: this.description,
       quantity: this.currentStock,
       photo: this.photo,
+      productLink: this.productLink,
+      price: this.price
     };
     // Check if we are editing or not
     if (this.editing) {

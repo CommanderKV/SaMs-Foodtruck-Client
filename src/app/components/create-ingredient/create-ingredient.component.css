@@ -15,6 +15,7 @@
     gap: 10px;
     width: 80%;
     padding: 20px;
+    margin-bottom: 100px;
     
     background-color: #291F37;
     
@@ -30,7 +31,12 @@
     justify-content: space-between;
     align-items: flex-start;
 
+    gap: 20px;
+
     width: 100%;
+}
+#ingredient-details section {
+    width: 50%;
 }
 #ingredient-details fieldset {
     border: none;
@@ -39,17 +45,20 @@
     font-size: 2vw;
     font-weight: bold;
     color: #DA0000;
+    text-align: center;
 }
-#ingredient-details input {
-    width: -webkit-fill-available;
+#ingredient-details input,
+#ingredient-details textarea {
+    width: 80%;
     border: none;
     color: #000000;
     font-size: 2vw;
     padding-left: 10px;
+    padding-right: 10px;
 
     background-color: #FFFFFF;
 
-    border-radius: 100px;
+    border-radius: 20px;
     border-color: #C900FF;
     border-width: 5px;
     border-style: solid;

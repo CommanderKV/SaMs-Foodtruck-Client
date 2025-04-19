@@ -11,6 +11,10 @@
                         <label for="name">Name:</label>
                         <input type="text" id="name" [(ngModel)]="name" placeholder="Ingredient name" required>
                     </fieldset>
+                    <fieldset>
+                        <label for="description">Description:</label>
+                        <textarea type="text" id="description" [(ngModel)]="description" placeholder="Ingredient description" rows="4"></textarea>
+                    </fieldset>
                     <app-photo-upload [photoURL]="photoUrl" (base64String)="photo"></app-photo-upload>
                 </section>
                 <section class="right">
@@ -21,6 +25,10 @@
                     <fieldset>
                         <label for="quantity">Current Stock</label>
                         <input type="number" id="quantity" [(ngModel)]="currentStock" placeholder="0" min="0" required>
+                    </fieldset>
+                    <fieldset>
+                        <label for="price">Price</label>
+                        <input type="number" id="price" [(ngModel)]="price" placeholder="0" min="0" step="any" required>
                     </fieldset>
                 </section>
             </section>

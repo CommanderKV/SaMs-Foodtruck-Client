@@ -4,12 +4,6 @@
     align-items: center;
     gap: 25px;
 }
-.title {
-    font-size: 5vw;
-    font-weight: bold;
-    color: #DA0000;
-    margin: 0;
-}
 .options {
     display: flex;
     flex-direction: row;
@@ -20,17 +14,5 @@
     margin: 0;
 }
 .options .btn {
-    background-color: #DA0000;
-
-    text-align: center;
-    color: #FFFFFF;
-    text-decoration: none;
-
-    font-size: 1.5vw;
-    font-weight: bold;
-
     padding: 10px 20px;
-    border-radius: 10px;
-
-    cursor: pointer;
 }

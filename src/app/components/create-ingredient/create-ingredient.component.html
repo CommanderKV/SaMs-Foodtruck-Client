@@ -4,8 +4,30 @@
     <div class="container">
         <h1 class="title">Edit / Add<br>Inventory Product</h1>
 
-        <div>
-            
+        <div class="card">
+            <section id="ingredient-details">
+                <section class="left">
+                    <fieldset>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" [(ngModel)]="name" placeholder="Ingredient name" required>
+                    </fieldset>
+                    <app-photo-upload [photoURL]="photoUrl" (base64String)="photo"></app-photo-upload>
+                </section>
+                <section class="right">
+                    <fieldset>
+                        <label for="productLink">Supplier / Product Link:</label>
+                        <input type="text" id="productLink" [(ngModel)]="productLink" placeholder="Ingredient url">
+                    </fieldset>
+                    <fieldset>
+                        <label for="quantity">Current Stock</label>
+                        <input type="number" id="quantity" [(ngModel)]="currentStock" placeholder="0" min="0" required>
+                    </fieldset>
+                </section>
+            </section>
+            <section class="buttons">
+                <a class="btn" (click)="deleteItem()" *ngIf="editing">Delete</a>
+                <a class="btn" (click)="saveItem()">Save</a>
+            </section>
         </div>
     </div>
 </div>

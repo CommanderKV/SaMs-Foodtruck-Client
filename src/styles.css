@@ -63,3 +63,27 @@ body {
     width: 5%;
     height: 100%;
 }
+
+.btn {
+    background-color: #DA0000;
+
+    text-align: center;
+    color: #FFFFFF;
+    text-decoration: none;
+
+    font-size: 1.5vw;
+    font-weight: bold;
+
+    padding: 5px 15px;
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.title {
+    font-size: 5vw;
+    font-weight: bold;
+    color: #DA0000;
+    margin: 0;
+    text-align: center;
+}

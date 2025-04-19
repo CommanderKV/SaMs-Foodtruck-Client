@@ -1,0 +1,27 @@
+.photo-fieldset {
+	border: none;
+}
+.photo-label {
+	font-size: 2vw;
+	font-weight: bold;
+	color: #DA0000;
+}
+.image-wrapper {
+	position: relative;
+	width: 200px;
+	border-radius: 12px;
+	overflow: hidden;
+}
+.photo-img {
+	width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 12px;
+	object-fit: cover;
+}
+.btn {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}

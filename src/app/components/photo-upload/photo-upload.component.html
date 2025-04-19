@@ -1,0 +1,9 @@
+<fieldset class="photo-fieldset">
+    <legend class="photo-label">Photo:</legend>
+
+    <div class="image-wrapper">
+        <img [src]="photoURL" alt="Uploaded Photo" class="photo-img">
+        <a class="btn" (click)="fileInput.click()">Change Photo</a>
+        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+    </div>
+</fieldset>

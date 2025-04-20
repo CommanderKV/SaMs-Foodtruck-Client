@@ -17,7 +17,6 @@ export class InventoryComponent implements OnInit {
   ingredients: any[] = [];
   changes: {id: string, quantity: number}[] = [];
 
-
   constructor(private service: IngredientService) {}
 
   ngOnInit() {

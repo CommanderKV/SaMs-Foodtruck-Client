@@ -5,7 +5,7 @@
         <h1 class="title">Inventory</h1>
         <div class="options">
             <a class="btn" routerLink="/admin/createIngredient">Add a Product</a>
-            <a class="btn btn-save" (click)="saveChanges()">Save changes</a>
+            <a class="btn btn-save" (click)="saveChanges()" *ngIf="changes.length > 0">Save changes</a>
             <a class="btn" routerLink="">View Usage Trends</a>
         </div>
         <div class="search-bar">

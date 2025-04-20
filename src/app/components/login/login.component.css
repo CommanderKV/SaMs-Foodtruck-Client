@@ -126,9 +126,15 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: auto;
+    width: 100%;
     height: 100%;
     z-index: -1;
+    overflow: hidden;
+}
+.background-image > img {
+    width: auto;
+    height: 100%;
+    object-fit: cover;
 }
 
 .main-content {
@@ -138,20 +144,20 @@
     align-items: flex-start;
 
     width: 50%;
-    height: 100vh;
+    height: 98vh;
 
     margin: auto;
     margin-left: 20px;
 }
 
-.main-content .title {
+.title {
     color: #DA0000;
     font-size: 10vw;
     margin: 0px;
     text-align: left;
 }
 
-.main-content .login-options {
+.login-options {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -159,9 +165,11 @@
     align-self: center;
 
     width: 50%;
+    min-width: min-content;
 
     margin-top: 20px;
     margin-left: 20px;
+    padding: 10px;
 
     border-radius: 20px;
     border-color: #C900FF;
@@ -171,7 +179,7 @@
     background-color: #0000008a;
 }
 
-.main-content .login-options .options {
+.login-options .options {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -185,10 +193,13 @@
 
     font-size: 2vw;
     font-weight: bold;
-    color: #DA0000;
+    color: #DA0000AD;
+
+    cursor: pointer;
+    user-select: none;
 }
 
-.main-content .login-options ul {
+.login-options ul {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -198,6 +209,37 @@
     padding: 0px;
 }
 
-.main-content .login-options li {
+.login-options li {
     list-style: none;
+}
+
+.active {
+    color: #DA0000;
+}
+
+@media (max-width: 768px) {
+    .login-options {
+        width: 70%;
+    }
+    .login-options .options > a {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 550px) {
+    .main-content {
+        align-items: center;
+        width: 90%;
+    }
+    .login-options {
+        width: 90%;
+        margin-left: 0;
+    }
+    .login-options .options > a {
+        font-size: 4vw;
+    }
+    .title {
+        font-size: 18vw;
+        text-align: center;
+    }
 }

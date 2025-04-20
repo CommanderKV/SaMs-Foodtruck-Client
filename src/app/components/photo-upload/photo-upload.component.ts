@@ -46,7 +46,7 @@ export class PhotoUploadComponent {
         this.base64String.emit(reader.result as string);
       };
 
-      // Read only the first file as we dont do multiple files
+      // Read only the first file as we don't do multiple files
       reader.readAsDataURL(input.files[0]);
     }
   }

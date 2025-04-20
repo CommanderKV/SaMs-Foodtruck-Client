@@ -69,6 +69,11 @@ export class CreateIngredientComponent implements OnInit {
     });
   }
 
+  // Set the base64 string format of the image.
+  setImage(data: string) {
+    this.photo = data;
+  }
+
   // Method called when editing an 
   // ingredient and wanting to delete it
   deleteItem() {}
@@ -76,7 +81,7 @@ export class CreateIngredientComponent implements OnInit {
   // Method called when wanting to 
   // save an ingredient
   saveItem() {
-    // Save the ingedient data
+    // Save the ingredient data
     let data = {
       name: this.name,
       description: this.description,
@@ -104,6 +109,7 @@ export class CreateIngredientComponent implements OnInit {
           alert("Failed to update ingredient");
         }
       });
+
     } else {
       // Create a new ingredient
       this.service.createIngredient(data).subscribe({

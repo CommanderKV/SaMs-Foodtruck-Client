@@ -15,7 +15,7 @@
                         <label for="description">Description:</label>
                         <textarea type="text" id="description" [(ngModel)]="description" placeholder="Ingredient description" rows="4"></textarea>
                     </fieldset>
-                    <app-photo-upload [photoURL]="photoUrl" (base64String)="photo"></app-photo-upload>
+                    <app-photo-upload [photoURL]="photoUrl" (base64String)="setImage($event)"></app-photo-upload>
                 </section>
                 <section class="right">
                     <fieldset>

@@ -89,18 +89,28 @@
     text-decoration: none;
     width: 20%;
 }
-.quantity-selector > span {
+.quantity-selector > input {
     font-size: 2vw;
     font-weight: bold;
     text-align: center;
 
-    width: 20%;
-    padding: 5px 0;
+    width: 30%;
+    padding: 5px 15px;
 
     border-radius: 10px;
     border-width: 3px;
     border-style: solid;
     border-color: #C900FF;
+    
+    background: none;
+    color: #FFFFFF;
+}
+.quantity-selector > input:focus {
+    outline: none;
+}
+.ingredient-btn {
+    cursor: pointer;
+    user-select: none;
 }
 
 .item-actions {
@@ -113,3 +123,10 @@
 .item-actions .btn {
     width: auto;
 }
+
+
+.btn-save {
+    border-style: solid;
+    border-color: #69DA00;
+}
+

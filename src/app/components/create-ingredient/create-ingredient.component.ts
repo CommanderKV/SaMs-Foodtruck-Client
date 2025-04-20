@@ -76,7 +76,27 @@ export class CreateIngredientComponent implements OnInit {
 
   // Method called when editing an 
   // ingredient and wanting to delete it
-  deleteItem() {}
+  deleteItem() {
+    // Check if we are editing an ingredient
+    if (this.editing) {
+      // Delete the ingredient
+      this.service.deleteIngredient(this.id).subscribe({
+        next: (response: any) => {
+          // Check if the response is successful
+          if (response.status === "success") {
+            alert("Ingredient deleted successfully!");
+            window.location.href = "/admin/invin";
+          } else {
+            alert("Failed to delete ingredient");
+          }
+        },
+        error: (error: any) => {
+          console.error(error);
+          alert("Failed to delete ingredient");
+        }
+      });
+    }
+  }
 
   // Method called when wanting to 
   // save an ingredient

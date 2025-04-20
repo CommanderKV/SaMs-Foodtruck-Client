@@ -20,10 +20,11 @@
 .inventory-list {
     display: grid;
     justify-content: center;
-    grid-template-columns: repeat(auto-fill, 27vw);
-    gap: 2vw;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(20vw, 1fr));
+    gap: 20px;
     width: 90%;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     list-style: none;
     overflow-y: auto;
@@ -35,8 +36,10 @@
     justify-content: center;
     align-items: center;
     
+    max-width: 300px;
     width: 20vw;
-    padding: 2vw 3vw;
+    padding: 15px 30px;
+    box-sizing: border-box;
 
     background-color: #291F37;
 
@@ -109,6 +112,7 @@
     outline: none;
 }
 .ingredient-btn {
+    margin: 0 5px;
     cursor: pointer;
     user-select: none;
 }
@@ -130,3 +134,42 @@
     border-color: #69DA00;
 }
 
+@media (max-width: 1023px) {
+    .inventory-list {
+        grid-template-columns: repeat(auto-fit, minmax(30vw, 1fr));
+    }
+    .inventory-item {
+        width: 30vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .item-details > h2 {
+        font-size: 2.5vw;
+    }
+    .item-details > h2 .small {
+        font-size: 1.5vw;
+    }
+}
+
+@media (max-width: 550px) {
+    .inventory-list {
+        grid-template-columns: repeat(auto-fit, minmax(60vw, 1fr));
+    }
+    .inventory-item {
+        width: 60vw;
+    }
+    .item-details > h2 {
+        font-size: 4vw;
+    }
+    .item-details > h2 .small {
+        font-size: 2.5vw;
+    }
+    .quantity-selector > input {
+        font-size: 4vw;
+    }
+    .options {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

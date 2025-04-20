@@ -18,10 +18,10 @@ export class CreateIngredientComponent implements OnInit {
   name: string = '';
   description: string | undefined = undefined;
   productLink: string | undefined = undefined;
-  currentStock: number = 0;
+  currentStock: number = -1;
   photo: string | undefined = undefined;
   photoUrl: string = "imgs/logo.png";
-  price: number = 0;
+  price: number = -1;
 
   @ViewChild("mainContainer") mainContainer!: ElementRef;
   messageClass: string = "";
@@ -91,7 +91,7 @@ export class CreateIngredientComponent implements OnInit {
       // Redirect to inventory page after 2 seconds
       setTimeout(() => {
         window.location.href = "/admin/invin";
-      }, 4000); // Redirect after 4 seconds
+      }, 2500); // Redirect after 2.5 seconds
     
     // If not redirecting, just set the message and class
     } else {
@@ -135,7 +135,14 @@ export class CreateIngredientComponent implements OnInit {
     if (this.name === "") {
       this.notify("Name is required", "msg-error");
       return;
+    } else if (this.currentStock < 0) {
+      this.notify("Stock cannot be negative", "msg-error");
+      return;
+    } else if (this.price < 0) {
+      this.notify("Price cannot be negative", "msg-error");
+      return;
     }
+
 
     // Save the ingredient data
     let data = {

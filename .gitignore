@@ -45,4 +45,4 @@ Thumbs.db
 environments
 
 # Imgs
-imgs/*
+public/imgs/*

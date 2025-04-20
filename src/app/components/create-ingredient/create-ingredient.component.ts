@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 import { PhotoUploadComponent } from '../photo-upload/photo-upload.component';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { IngredientService } from '../../services/ingredient.service';
+import { not } from 'rxjs/internal/util/not';
 
 
 @Component({
   selector: 'app-create-ingredient',
-  imports: [ AdminNavComponent, PhotoUploadComponent, NgIf, FormsModule ],
+  imports: [ AdminNavComponent, PhotoUploadComponent, NgIf, FormsModule, NgClass ],
   templateUrl: './create-ingredient.component.html',
   styleUrl: './create-ingredient.component.css'
 })
@@ -22,6 +23,9 @@ export class CreateIngredientComponent implements OnInit {
   photoUrl: string = "imgs/logo.png";
   price: number = 0;
 
+  @ViewChild("mainContainer") mainContainer!: ElementRef;
+  messageClass: string = "";
+  message: string = "";
   editing: boolean = false;
   private id: string = '';
 
@@ -59,10 +63,8 @@ export class CreateIngredientComponent implements OnInit {
           this.price = data.price || 0;
         }
       },
+      // Ingredient wasn't found, redirect to inventory page
       error: (error: any) => {
-        // Tell user the ingredient was not found
-        alert("Ingredient was not found. Going back to inventory.");
-
         // Redirect to inventory page
         window.location.href = "/admin/invin";
       }
@@ -72,6 +74,30 @@ export class CreateIngredientComponent implements OnInit {
   // Set the base64 string format of the image.
   setImage(data: string) {
     this.photo = data;
+  }
+
+  // Notify the user of something
+  notify(message: string, className: string, redirect: boolean = false) {
+    const container = document.querySelector("#mainContainer");
+    if (container) {
+      container.scrollTop = 0;
+    }
+
+    // Check if we need to redirect
+    if (redirect) {
+      this.message = message + " Going back to inventory...";
+      this.messageClass = className;
+
+      // Redirect to inventory page after 2 seconds
+      setTimeout(() => {
+        window.location.href = "/admin/invin";
+      }, 4000); // Redirect after 4 seconds
+    
+    // If not redirecting, just set the message and class
+    } else {
+      this.message = message;
+      this.messageClass = className; 
+    }
   }
 
   // Method called when editing an 
@@ -84,15 +110,19 @@ export class CreateIngredientComponent implements OnInit {
         next: (response: any) => {
           // Check if the response is successful
           if (response.status === "success") {
-            alert("Ingredient deleted successfully!");
-            window.location.href = "/admin/invin";
+            this.notify("Ingredient deleted successfully!", "msg-success", true);
+
           } else {
-            alert("Failed to delete ingredient");
+            // Failed to delete the ingredient
+            this.notify("Failed to delete ingredient", "msg-error");
           }
         },
         error: (error: any) => {
+          // Failed to delete the ingredient
+          this.notify("Failed to delete ingredient", "msg-error");
+
+          // Log the error for debugging
           console.error(error);
-          alert("Failed to delete ingredient");
         }
       });
     }
@@ -101,9 +131,15 @@ export class CreateIngredientComponent implements OnInit {
   // Method called when wanting to 
   // save an ingredient
   saveItem() {
+    // Check for required fields
+    if (this.name === "") {
+      this.notify("Name is required", "msg-error");
+      return;
+    }
+
     // Save the ingredient data
     let data = {
-      name: this.name,
+      name: this.name.charAt(0).toUpperCase() + this.name.slice(1),
       description: this.description,
       quantity: this.currentStock,
       photo: this.photo,
@@ -118,15 +154,17 @@ export class CreateIngredientComponent implements OnInit {
         next: (response: any) => {
           // Check if the response is successful
           if (response.status === "success") {
-            alert("Ingredient updated successfully!");
-            window.location.href = "/admin/invin";
+            this.notify("Ingredient updated successfully!", "msg-success", true);
+          
           } else {
-            alert("Failed to update ingredient");
+            // Failed to update the ingredient
+            this.notify("Failed to update ingredient", "msg-error");
           }
         },
         error: (error: any) => {
+          // Failed to update the ingredient
+          this.notify("Failed to update ingredient", "msg-error");
           console.error(error);
-          alert("Failed to update ingredient");
         }
       });
 
@@ -136,15 +174,19 @@ export class CreateIngredientComponent implements OnInit {
         next: (response: any) => {
           // Check if the response is successful
           if (response.status === "success") {
-            alert("Ingredient created successfully!");
-            window.location.href = "/admin/invin";
+            this.notify("Ingredient created successfully!", "msg-success", true);
+
           } else {
-            alert("Failed to create ingredient");
+            // Failed to create the ingredient
+            this.notify("Failed to create ingredient", "msg-error");
           }
         },
         error: (error: any) => {
+          // Failed to create the ingredient
+          this.notify("Failed to create ingredient", "msg-error");
+
+          // Log the error for debugging
           console.error(error);
-          alert("Failed to create ingredient");
         }
       });
     }

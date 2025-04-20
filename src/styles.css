@@ -89,3 +89,26 @@ body {
     margin: 0;
     text-align: center;
 }
+
+.msg-success,
+.msg-error {
+    font-size: 2vw;
+    font-weight: bold;
+    text-align: center;
+
+    margin: 0;
+    padding: 10px;
+    width: 50%;
+
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 2px;
+}
+.msg-success {
+    border-color: #00FF00;
+    background-color: #003D00;
+}
+.msg-error {
+    border-color: #FF0000;
+    background-color: #3D0000;
+}

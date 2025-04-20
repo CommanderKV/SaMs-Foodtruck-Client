@@ -1,8 +1,10 @@
 <app-admin-nav></app-admin-nav>
 
-<div class="container-25-75">
+<div id="mainContainer" class="container-25-75">
     <div class="container">
         <h1 class="title">Edit / Add<br>Inventory Product</h1>
+
+        <h2 [ngClass]="messageClass">{{message}}</h2>
 
         <div class="card">
             <section id="ingredient-details">

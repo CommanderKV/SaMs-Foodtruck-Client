@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 ////////////////////////////////////
 //  Import authorization service  //
 ////////////////////////////////////
-import { AuthGaurdService } from './services/auth-gaurd.service';
+import { AuthGuardService } from './services/auth-guard.service';
 
 
 //////////////////////////
@@ -18,7 +18,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { CreateIngredientComponent } from './components/create-ingredient/create-ingredient.component';
-import { unsavedChangesGuard } from './gaurds/unsaved-changes.guard';
+import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+import { AdminMenuComponent } from './components/admin-menu/admin-menu.component';
 
 /////////////////////////////////////////////
 //  Create the routes for the application  //
@@ -29,8 +30,8 @@ export const routes: Routes = [
     { path: "login", component: LoginComponent },
     { path: "menu", component: MenuComponent },
     { path: "dashboard", component: DashboardComponent },
-    { path: "admin", component: AdminComponent, canActivate: [AuthGaurdService] },
-    { path: "admin/invin", component: InventoryComponent, canActivate: [AuthGaurdService], canDeactivate: [unsavedChangesGuard] },
-    { path: "admin/createIngredient", component: CreateIngredientComponent, canActivate: [AuthGaurdService] },
-    { path: "admin/createIngredient", component: CreateIngredientComponent, canActivate: [AuthGaurdService] },
+    { path: "admin", component: AdminComponent, canActivate: [AuthGuardService] },
+    { path: "admin/invin", component: InventoryComponent, canActivate: [AuthGuardService], canDeactivate: [unsavedChangesGuard] },
+    { path: "admin/createIngredient", component: CreateIngredientComponent, canActivate: [AuthGuardService] },
+    { path: "admin/menu", component: AdminMenuComponent, canActivate: [AuthGuardService] },
 ];

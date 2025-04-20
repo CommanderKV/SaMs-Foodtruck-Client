@@ -1,13 +1,15 @@
 <app-nav></app-nav>
 
-<img class="background-image" src="imgs/menu-background.jpg" />
+<div class="background-image">
+    <img src="imgs/menu-background.jpg" />
+</div>
 <div class="fade"></div>
 <div class="main-content">
     <h1 class="title">SaM's<br>Lunchbox</h1>
     <div class="login-options">
         <div class="options">
-            <a (click)="login = true">Login</a>
-            <a (click)="login = false">Signup</a>
+            <a (click)="loginToggle()" [ngClass]="loginClass">Login</a>
+            <a (click)="signupToggle()" [ngClass]="signupClass">Signup</a>
         </div>
         <ul *ngIf="login">
             <li>

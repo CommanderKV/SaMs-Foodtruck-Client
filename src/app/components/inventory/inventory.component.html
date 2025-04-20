@@ -9,7 +9,7 @@
             <a class="btn" routerLink="">View Usage Trends</a>
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="I want a..." [(ngModel)]="searchItem"/>
+            <input type="text" placeholder="I want a..." [(ngModel)]="searchItem" (ngModelChange)="search()"/>
             <span class="search-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
             </span>
@@ -17,25 +17,27 @@
 
         <div class="inventory-list">
             <h1 *ngIf="ingredients.length === 0">No ingredients found</h1>
-            <div class="inventory-item" *ngFor="let item of ingredients; let pos = index">
-                <img [src]="'imgs/' + item.photo" alt="{{item.name}} image" class="item-img"/>
-                <div class="item-details">
-                    <h2>{{item.name}}<span class="small"> ${{item.price}}</span></h2>
-                    <div class="quantity-selector">
-                        <a class="ingredient-btn" (click)="decreaseQuantity(item.id, pos)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                        </a>
-                        <input class="quantity" type="number" min="0" step="any" value="{{item.quantity}}" [(ngModel)]="item.quantity" (blur)="setQuantity(item.id, item.quantity, pos)">
-                        <a class="ingredient-btn" (click)="increaseQuantity(item.id, pos)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
-                        </a>
+            <ng-container *ngFor="let item of ingredients; let pos = index">
+                <div class="inventory-item" *ngIf="item.display">
+                    <img [src]="'imgs/' + item.photo" alt="{{item.name}} image" class="item-img"/>
+                    <div class="item-details">
+                        <h2>{{item.name}}<span class="small"> ${{item.price}}</span></h2>
+                        <div class="quantity-selector">
+                            <a class="ingredient-btn" (click)="decreaseQuantity(item.id, pos)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                            </a>
+                            <input class="quantity" type="number" min="0" step="any" value="{{item.quantity}}" [(ngModel)]="item.quantity" (blur)="setQuantity(item.id, item.quantity, pos)">
+                            <a class="ingredient-btn" (click)="increaseQuantity(item.id, pos)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <a class="btn" (click)="goToItemPurchasePage(item.productLink)">Order more</a>
+                        <a class="btn" (click)="editItem(item.id)">Edit</a>
                     </div>
                 </div>
-                <div class="item-actions">
-                    <a class="btn" (click)="goToItemPurchasePage(item.productLink)">Order more</a>
-                    <a class="btn" (click)="editItem(item.id)">Edit</a>
-                </div>
-            </div>
+            </ng-container>
         </div>
     </div>
 </div>

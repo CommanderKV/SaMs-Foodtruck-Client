@@ -27,6 +27,10 @@ export class InventoryComponent implements OnInit {
         if (data.status === "success") {
           // Assign the data to the ingredients variable
           this.ingredients = data.data;
+          this.ingredients.forEach(item => {
+            // Set the display property to true
+            item.display = true;
+          });
         }
       },
       error: (error: any) => {
@@ -37,6 +41,31 @@ export class InventoryComponent implements OnInit {
     });
   }
 
+  // Search for an item in the inventory
+  search() {
+    // Check if the search item is empty
+    if (this.searchItem === "") {
+      // Display all items
+      this.ingredients.forEach(item => {
+        item.display = true;
+      });
+
+    } else {
+      // Only display items that match the search value
+      this.ingredients.forEach(item => {
+        // Show values that match the search value
+        if (item.name.toLowerCase().includes(this.searchItem.toLowerCase())) {
+          item.display = true;
+
+        // Hide items that do not match the search value
+        } else {
+          item.display = false;
+        }
+      })
+    }
+  }
+
+  // Check if the user has unsaved changes
   canDeactivate(): boolean {
     // Check if there are unsaved changes
     const unsavedChanges = this.changes.length > 0;

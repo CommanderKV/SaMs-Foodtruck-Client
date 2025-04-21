@@ -91,6 +91,7 @@
 .quantity-selector > a {
     text-decoration: none;
     width: 20%;
+    user-select: none;
 }
 .quantity-selector > input {
     font-size: 2vw;

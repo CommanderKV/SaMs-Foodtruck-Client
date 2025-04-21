@@ -80,6 +80,8 @@ body {
 
     cursor: pointer;
     user-select: none;
+
+    box-sizing: border-box;
 }
 
 .title {

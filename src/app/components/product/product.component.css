@@ -1,0 +1,291 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 25px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    gap: 10px;
+    width: 90%;
+    padding: 20px;
+    margin-bottom: 100px;
+    
+    background-color: #291F37;
+    
+    border-radius: 20px;
+    border-color: #C900FF;
+    border-width: 3px;
+    border-style: solid;
+}
+
+#product-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 20px;
+
+    width: 100%;
+}
+#product-details section:nth-child(1) {
+    width: 40%;
+}
+#product-details section:nth-child(2) {
+    width: 60%;
+}
+fieldset {
+    border: none;
+    padding: 5px 0px;
+    margin: 0px;
+}
+label {
+    font-size: 2vw;
+    font-weight: bold;
+    color: #DA0000;
+    text-align: center;
+}
+input,
+textarea {
+    width: 80%;
+    border: none;
+    color: #000000;
+    font-size: 2vw;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    background-color: #FFFFFF;
+
+    border-radius: 20px;
+    border-color: #C900FF;
+    border-width: 5px;
+    border-style: solid;
+}
+input:focus {
+    outline: none;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+
+    width: 30%;
+    margin: 0;
+}
+.buttons .btn {
+    font-size: 2vw;
+}
+
+#product-types,
+#categories-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+
+    width: 100%;
+    margin-top: 20px;
+}
+#product-types table,
+#categories-table table {
+    margin-left: 10px;
+}
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+
+    background-color: transparent;
+
+    border-width: 3px;
+    border-style: solid;
+    border-color: #C900FF;
+    border-radius: 0px;
+
+    cursor: pointer;
+}
+input[type="checkbox"]:checked {
+    background-color: #C900FF;
+}
+#product-types h3,
+#categories-table h3 {
+    margin: 0;
+    margin-right: 10px;
+    padding: 0;
+    font-size: 1.5vw;
+}
+#categories-table {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+}
+
+
+#ingredients-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#ingredients-table > thead > tr th {
+    font-size: 1.5vw;
+    width: 30%;
+}
+#ingredients-table > thead > tr th:nth-child(1) {
+    text-align: left;
+}
+#ingredients-table > tbody > tr td {
+    width: -webkit-fill-available;
+    text-align: center;
+}
+#ingredients-table > tbody > tr td:nth-child(1) {
+    text-align: left;
+    font-size: 1.5vw;
+}
+#ingredients-table > tbody > tr > td .btn {
+    margin-left: 5px;
+}
+.quantity-selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.quantity-selector > a {
+    text-decoration: none;
+    width: 20%;
+    margin: 0 5px;
+    user-select: none;
+}
+.quantity-selector > input {
+    font-size: 2vw;
+    font-weight: bold;
+    text-align: center;
+
+    width: 30%;
+    padding: 5px 15px;
+
+    border-radius: 10px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: #C900FF;
+    
+    background: none;
+    color: #FFFFFF;
+}
+.quantity-selector > input:focus {
+    outline: none;
+}
+#ingredients-table {
+    margin-bottom: 15px;
+}
+
+select {
+    /* Carrot dropdown styling */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("dropdownArrow.svg");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1vw;
+
+    border-radius: 20px;
+    border-color: #C900FF;
+    border-width: 3px;
+    border-style: solid;
+    background-color: #FFFFFF;
+
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 35px; /* Spacing for the carrot */
+
+    font-size: 1vw;
+    font-weight: bold;
+    color: #000000;
+}
+#ingredientSelect,
+#toppingSelect,
+#categorySelect {
+    width: 100%;
+    font-size: 1.5vw;
+}
+
+#toppings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#toppings-table > tbody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+#toppings-table > tbody > tr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+
+    width: 100%;
+
+    border-radius: 20px;
+    border-color: #C900FF;
+    border-width: 3px;
+    border-style: solid;
+
+    background-color: #1F172D;
+    padding: 5px;
+    padding-bottom: 10px;
+}
+#toppings-table > tbody > tr > td:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+#toppings-table > tbody > tr > td:nth-child(1) > input {
+    width: 25%;
+    font-size: 1.5vw;
+}
+#toppings-table table > thead > tr th {
+    font-size: 1.5vw;
+}
+#toppings-table table > thead > tr th:nth-child(1) {
+    text-align: left;
+}
+#toppings-table table > tbody > tr td {
+    font-size: 1.5vw;
+    text-align: center;
+}
+#toppings-table table > tbody > tr td:nth-child(1) {
+    text-align: left;
+    width: 20%;
+}
+#toppings-table table > tbody > tr td:nth-child(2) {
+    width: 10%;
+}
+#toppings-table table > tbody > tr .topping-price {
+    width: 10%;
+}
+#toppings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+}
+#toppingSelect {
+    margin-top: 15px;
+}

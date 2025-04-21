@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { IngredientService } from '../../services/ingredient.service';
-import { not } from 'rxjs/internal/util/not';
 
 
 @Component({

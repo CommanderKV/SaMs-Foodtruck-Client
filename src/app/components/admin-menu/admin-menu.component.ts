@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-menu',
-  imports: [ AdminNavComponent, FormsModule, NgIf, NgFor ],
+  imports: [ AdminNavComponent, FormsModule, NgIf, NgFor, RouterLink ],
   templateUrl: './admin-menu.component.html',
   styleUrl: './admin-menu.component.css'
 })

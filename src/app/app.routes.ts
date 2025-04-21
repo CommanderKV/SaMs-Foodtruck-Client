@@ -20,6 +20,7 @@ import { InventoryComponent } from './components/inventory/inventory.component';
 import { CreateIngredientComponent } from './components/create-ingredient/create-ingredient.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { AdminMenuComponent } from './components/admin-menu/admin-menu.component';
+import { ProductComponent } from './components/product/product.component';
 
 /////////////////////////////////////////////
 //  Create the routes for the application  //
@@ -32,6 +33,7 @@ export const routes: Routes = [
     { path: "dashboard", component: DashboardComponent },
     { path: "admin", component: AdminComponent, canActivate: [AuthGuardService] },
     { path: "admin/invin", component: InventoryComponent, canActivate: [AuthGuardService], canDeactivate: [unsavedChangesGuard] },
-    { path: "admin/createIngredient", component: CreateIngredientComponent, canActivate: [AuthGuardService] },
+    { path: "admin/ingredient", component: CreateIngredientComponent, canActivate: [AuthGuardService] },
     { path: "admin/menu", component: AdminMenuComponent, canActivate: [AuthGuardService] },
+    { path: "admin/product", component: ProductComponent, canActivate: [AuthGuardService] },
 ];

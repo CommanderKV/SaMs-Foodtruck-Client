@@ -175,7 +175,7 @@ export class InventoryComponent implements OnInit {
 
   editItem(id: string) {
     // Navigate to the item edit page
-    window.location.href = `admin/createIngredient?id=${id}`;
+    window.location.href = `admin/ingredient?id=${id}`;
   }
 
 

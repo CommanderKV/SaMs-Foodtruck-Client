@@ -1,0 +1,191 @@
+<app-admin-nav></app-admin-nav>
+
+<div id="mainContainer" class="container-25-75">
+    <div class="container">
+        <h1 class="title">Edit / Add<br>Menu Product</h1>
+        <h2 [ngClass]="messageClass">{{message}}</h2>
+
+        <div class="card">
+            <section id="product-details">
+                <section class="left">
+                    <fieldset>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" [(ngModel)]="name" placeholder="Product name" required>
+                    </fieldset>
+                    <fieldset>
+                        <label for="description">Description:</label>
+                        <textarea type="text" id="description" [(ngModel)]="description" placeholder="Product description" rows="4"></textarea>
+                    </fieldset>
+                    <app-photo-upload [photoURL]="photoUrl" (base64String)="setImage($event)"></app-photo-upload>
+                    <fieldset>
+                        <label for="stock">Available stock</label>
+                        <input type="number" id="stock" [(ngModel)]="availableStock" placeholder="0" min="0" readonly>
+                    </fieldset>
+                </section>
+                <section class="right">
+                    <fieldset id="product-types">
+                        <label>What type of item is this?</label>
+                        <table>
+                            <tbody>
+                                <tr *ngFor="let item of types; let pos = index">
+                                    <td>
+                                        <h3>{{item}}</h3>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" [value]="item" [(ngModel)]="type[item]">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    <fieldset>
+                        <label>Required ingredients:</label>
+                        <table id="ingredients-table">
+                            <thead>
+                                <tr>
+                                    <th>Ingredient</th>
+                                    <th>Amount</th>
+                                    <th>Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let ingredient of ingredients; let pos = index">
+                                    <td>{{ingredient.name}}</td>
+                                    <td>
+                                        <div class="quantity-selector">
+                                            <a class="ingredient-btn" (click)="decreaseQuantity(pos)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                            </a>
+                                            <input class="quantity" type="number" min="0" step="any" value="{{ingredient.quantity}}" [(ngModel)]="ingredient.quantity" (blur)="setQuantity(ingredient.quantity, pos)">
+                                            <a class="ingredient-btn" (click)="increaseQuantity(pos)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select [(ngModel)]="ingredient.unit">
+                                            <option value="">Select unit</option>
+                                            <option *ngFor="let unit of units" [value]="unit">{{unit}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a class="btn" (click)="removeIngredient(pos)">-</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <select id="ingredientSelect" (change)="addIngredient($event)">
+                            <option value="">Add ingredient</option>
+                            <option *ngFor="let ingredient of filteredIngredients" [value]="ingredient.id">{{ingredient.name}}</option>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label>Categories:</label>
+                        <table id="categories-table">
+                            <tbody>
+                                <tr *ngFor="let category of categories; let pos = index">
+                                    <td>
+                                        <h3>{{category.name}}</h3>
+                                    </td>
+                                    <td>
+                                        <a class="btn" (click)="removeCategory(pos)">-</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <select id="categorySelect" (change)="addCategory($event)">
+                            <option value="">Add category</option>
+                            <option *ngFor="let category of filteredCategories" [value]="category.id">{{category.name}}</option>
+                        </select>
+                    </fieldset>
+                    
+                </section>
+            </section>
+            <fieldset id="toppings">
+                <label>Toppings</label>
+                <table id="toppings-table" *ngIf="groups.length > 0">
+                    <tbody>
+                        <tr *ngFor="let group of groups; let groupPos = index">
+                            <td>
+                                <input type="text" [(ngModel)]="group.name" placeholder="Group name" required>
+                            </td>
+                            <td>
+                                <table *ngIf="group.toppings.length > 0">
+                                    <thead>
+                                        <tr>
+                                            <th>Topping</th>
+                                            <th>Included</th>
+                                            <th>Min quantity</th>
+                                            <th>Default quantity</th>
+                                            <th>Max quantity</th>
+                                            <th>Price/Topping</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let topping of group.toppings; let pos = index">
+                                            <td>{{topping.name}}</td>
+                                            <td>
+                                                <input type="checkbox" [(ngModel)]="topping.included">
+                                            </td>
+                                            <td>
+                                                <div class="quantity-selector">
+                                                    <a class="ingredient-btn" (click)="decreaseMinQuantity(groupPos, pos)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                    </a>
+                                                    <input class="quantity" type="number" min="0" step="any" value="{{topping.minQuantity}}" [(ngModel)]="topping.minQuantity" (blur)="setMinQuantity(topping.minQuantity, groupPos, pos)">
+                                                    <a class="ingredient-btn" (click)="increaseMinQuantity(groupPos, pos)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="quantity-selector">
+                                                    <a class="ingredient-btn" (click)="decreaseDefaultQuantity(groupPos, pos)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                    </a>
+                                                    <input class="quantity" type="number" min="0" step="any" value="{{topping.defaultQuantity}}" [(ngModel)]="topping.defaultQuantity" (blur)="setDefaultQuantity(groupPos, pos, topping.defaultQuantity)">
+                                                    <a class="ingredient-btn" (click)="increaseDefaultQuantity(groupPos, pos)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="quantity-selector">
+                                                    <a class="ingredient-btn" (click)="decreaseMaxQuantity(groupPos, pos)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                    </a>
+                                                    <input class="quantity" type="number" min="0" step="any" value="{{topping.maxQuantity}}" [(ngModel)]="topping.maxQuantity" (blur)="setMaxQuantity(topping.maxQuantity, groupPos, pos)">
+                                                    <a class="ingredient-btn" (click)="increaseMaxQuantity(groupPos, pos)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="topping-price">
+                                                <input type="number" min="0" step="any" value="{{topping.priceAdjustment}}" [(ngModel)]="topping.priceAdjustment">
+                                            </td>
+                                            <td>
+                                                <a class="btn" (click)="removeTopping(groupPos, pos)">-</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <select id="toppingSelect" (change)="addTopping(groupPos, $event)">
+                                    <option value="">Add topping</option>
+                                    <option *ngFor="let topping of filteredToppings(groupPos)" [value]="topping.id">{{topping.name}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <a class="btn" (click)="removeGroup(groupPos)">Remove Group</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a class="btn" (click)="addGroup()">New Topping Group</a>
+            </fieldset>
+            <section class="buttons">
+                <a class="btn" (click)="deleteItem()" *ngIf="editing">Delete</a>
+                <a class="btn" (click)="saveItem()">Save</a>
+            </section>
+        </div>
+    </div>
+</div>

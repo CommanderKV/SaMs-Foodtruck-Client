@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-categories',
-  imports: [ AdminNavComponent, FormsModule, NgFor, NgIf ],
+  imports: [ AdminNavComponent, RouterLink, FormsModule, NgFor, NgIf ],
   templateUrl: './admin-categories.component.html',
   styleUrl: './admin-categories.component.css'
 })

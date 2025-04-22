@@ -1,0 +1,24 @@
+<app-admin-nav></app-admin-nav>
+
+<div id="mainContainer" class="container-25-75">
+    <div class="container">
+        <h1 class="title">Edit / Add<br>Category</h1>
+
+        <h2 [ngClass]="messageClass">{{message}}</h2>
+
+        <div class="card">
+            <fieldset>
+                <label for="name">Name:</label>
+                <input type="text" id="name" [(ngModel)]="name" placeholder="Category name" required>
+            </fieldset>
+            <fieldset>
+                <label for="description">Description:</label>
+                <textarea type="text" id="description" [(ngModel)]="description" placeholder="Category description" rows="4"></textarea>
+            </fieldset>
+            <div class="options">
+                <a class="btn" (click)="delete()" *ngIf="editing">Delete</a>
+                <a class="btn" (click)="save()">Save</a>
+            </div>
+        </div>
+    </div>
+</div>

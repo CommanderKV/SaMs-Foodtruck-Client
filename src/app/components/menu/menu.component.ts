@@ -96,6 +96,19 @@ export class MenuComponent implements OnInit {
             });
           }
         }
+
+        // Sort to make sure that the miscellaneous category is at the end
+        if (this.menuItems !== null) {
+          this.menuItems.sort((a, b) => {
+            if (a.category === "Miscellaneous") {
+              return 1;
+            } else if (b.category === "Miscellaneous") {
+              return -1;
+            } else {
+              return a.category.localeCompare(b.category);
+            }
+          });
+        }
       },
       error: (error: any) => {
         console.log("Error: " + error);

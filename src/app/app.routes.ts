@@ -22,6 +22,7 @@ import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { AdminMenuComponent } from './components/admin-menu/admin-menu.component';
 import { ProductComponent } from './components/product/product.component';
 import { AdminCategoriesComponent } from './components/admin-categories/admin-categories.component';
+import { CategoryComponent } from './components/category/category.component';
 
 /////////////////////////////////////////////
 //  Create the routes for the application  //
@@ -38,4 +39,5 @@ export const routes: Routes = [
     { path: "admin/menu", component: AdminMenuComponent, canActivate: [AuthGuardService] },
     { path: "admin/product", component: ProductComponent, canActivate: [AuthGuardService] },
     { path: "admin/categories", component: AdminCategoriesComponent, canActivate: [AuthGuardService] },
+    { path: "admin/category", component: CategoryComponent, canActivate: [AuthGuardService] },
 ];

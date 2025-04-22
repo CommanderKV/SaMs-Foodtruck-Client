@@ -30,4 +30,9 @@ export class CategoryService {
   updateCategory(id: number, category: { name: string, description: string }) {
     return this.http.put(`${this.serverUrl}/categories/update/${id}`, category, { withCredentials: true });
   }
+
+  // Delete a category
+  deleteCategory(id: number) {
+    return this.http.delete(`${this.serverUrl}/categories/delete/${id}`, { withCredentials: true });
+  }
 }

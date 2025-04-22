@@ -88,7 +88,27 @@ export class CategoryComponent {
 
 
   // Delete the category
-  delete() {}
+  delete() {
+    // Confirm the deletion
+    if (confirm("Are you sure you want to delete this category?")) {
+      // Delete the category
+      this.service.deleteCategory(this.id).subscribe({
+        next: (response: any) => {
+          // Check if the response is successful
+          if (response.status === "success") {
+            // Notify the user of success
+            this.notify("Category deleted successfully", "msg-success", true);
+          } else {
+            // Notify the user of failure
+            this.notify("Category deletion failed", "msg-error");
+          }
+        },
+        error: (error: any) => {
+          this.notify("Error deleting category", "msg-error");
+        }
+      });
+    }
+  }
 
   // Save the category
   save() {

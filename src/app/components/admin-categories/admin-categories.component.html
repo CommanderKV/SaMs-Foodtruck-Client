@@ -24,13 +24,16 @@
                         </div>
                     </div>
                     <ul *ngIf="category.displayOptions">
-                        <li class="category-item-product" *ngFor="let item of category.items">
-                            <div>
-                                <img [src]="item.photo" alt="Image of a {{item.name}}"/>
-                                <h3>{{item.name}}</h3>
-                            </div>
-                            <a class="btn" (click)="editProduct(item.id)">Edit</a>
-                        </li>
+                        <li *ngIf="category.items.length === 0"><h3>No products in this category</h3></li>
+                        <ng-container *ngIf="category.items.length > 0">
+                            <li class="category-item-product" *ngFor="let item of category.items">
+                                <div>
+                                    <img [src]="item.photo" alt="Image of a {{item.name}}"/>
+                                    <h3>{{item.name}}</h3>
+                                </div>
+                                <a class="btn" (click)="editProduct(item.id)">Edit</a>
+                            </li>
+                        </ng-container>
                     </ul>
                 </div>
             </ng-container>

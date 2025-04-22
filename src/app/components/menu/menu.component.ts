@@ -19,7 +19,15 @@ export class MenuComponent implements OnInit {
   searchItem: string = "";
 
   // Example menu items
-  menuItems: {category: string, items: {imageUrl: string, name: string, price: number, description: string}[]}[] | null = null;
+  menuItems: {
+    category: string, 
+    items: {
+      imageUrl: string, 
+      name: string, 
+      price: number, 
+      description: string
+    }[]
+  }[] | null = null;
 
 
   // Inject the ProductService dependency into the component
@@ -50,8 +58,8 @@ export class MenuComponent implements OnInit {
           let product = products[i];
 
           // Get the categories
-          let categories = product.catefories;
-          if (categories.length == 0) {
+          let categories = product.categories;
+          if (categories === undefined || categories.length == 0) {
             // Make a category called Miscellaneous
             categories = [{name: "Miscellaneous"}];
           }
@@ -81,7 +89,7 @@ export class MenuComponent implements OnInit {
 
             // Add the product to the category
             this.menuItems[categoryIndex].items.push({
-              imageUrl: product.photo,
+              imageUrl: `imgs/${product.photo}`,
               name: product.name,
               price: product.price,
               description: product.description

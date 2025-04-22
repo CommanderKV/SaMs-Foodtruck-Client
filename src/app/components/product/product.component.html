@@ -98,7 +98,6 @@
                             <option *ngFor="let category of filteredCategories" [value]="category.id">{{category.name}}</option>
                         </select>
                     </fieldset>
-                    
                 </section>
             </section>
             <fieldset id="toppings">
@@ -107,7 +106,28 @@
                     <tbody>
                         <tr *ngFor="let group of groups; let groupPos = index">
                             <td>
-                                <input type="text" [(ngModel)]="group.name" placeholder="Group name" required>
+                                <table class="group-details">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Required</th>
+                                            <th>Multiple selection</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="text" [(ngModel)]="group.name" placeholder="Group name" required>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" [(ngModel)]="group.required">
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" [(ngModel)]="group.multiple">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                             <td>
                                 <table *ngIf="group.toppings.length > 0">

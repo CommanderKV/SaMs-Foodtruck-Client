@@ -17,7 +17,7 @@ export class OptionGroupService {
   }
 
   // Create a new option group
-  createOptionGroup(optionGroup: { sectionName: string, multipleChoice: boolean, productId: number }) {
+  createOptionGroup(optionGroup: { sectionName: string, multipleChoice: boolean, required: boolean, productId: number }) {
     return this.http.post(`${this.serverUrl}/optionGroups/create`, optionGroup, { withCredentials: true });
   }
 

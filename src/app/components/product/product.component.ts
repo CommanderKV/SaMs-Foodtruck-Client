@@ -32,6 +32,8 @@ export class ProductComponent implements OnInit {
   photoUrl: string = "imgs/logo.png";
   photo: string | undefined = undefined;
   price: number | undefined = undefined;
+  required: boolean = false;
+  multipleSelection: boolean = false;
 
   types: any[] = [ "Main", "Side", "Drink"];
   type: string[] = [];
@@ -46,15 +48,20 @@ export class ProductComponent implements OnInit {
     price: number
   }[] = [];
   ingredients: { id: number, name: string, quantity: number, unit: string }[] = [];
-  groups: {name: string, toppings: { 
-    id: number, 
-    name: string, 
-    included: boolean,
-    minQuantity: number, 
-    defaultQuantity: number, 
-    maxQuantity: number, 
-    priceAdjustment: number 
-  }[]}[] = [];
+  groups: {
+    name: string,
+    required: boolean,
+    multiple: boolean, 
+    toppings: { 
+      id: number, 
+      name: string, 
+      included: boolean,
+      minQuantity: number, 
+      defaultQuantity: number, 
+      maxQuantity: number, 
+      priceAdjustment: number 
+    }[]
+  }[] = [];
   allCategories: {id: number, name: string, description: string}[] = [];
   categories: { id: number, name: string }[] = [];
 
@@ -408,7 +415,7 @@ export class ProductComponent implements OnInit {
 
   // Add the group to the list
   addGroup() {
-    this.groups.push({name: "", toppings: []});
+    this.groups.push({name: "", required: false, multiple: false, toppings: []});
   }
 
   // Remove the group from the list
@@ -490,7 +497,8 @@ export class ProductComponent implements OnInit {
         let optionGroup = {
           id: -1,
           sectionName: group.name,
-          multipleChoice: false, 
+          multipleChoice: group.multiple, 
+          required: group.required,
           productId: productId
         }
         const optionGroupCreation: any = await lastValueFrom(this.optionGroupService.createOptionGroup(optionGroup));
@@ -569,7 +577,7 @@ export class ProductComponent implements OnInit {
     /////////////////////////////////////////
     // Inform user creation was successful //
     /////////////////////////////////////////
-    this.notify("Product created successfully", "msg-success");
+    this.notify("Product created successfully", "msg-success", true);
   }
 
 

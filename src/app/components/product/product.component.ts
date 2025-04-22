@@ -5,6 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { PhotoUploadComponent } from '../photo-upload/photo-upload.component';
 import { FormsModule } from '@angular/forms';
 import { IngredientService } from '../../services/ingredient.service';
+import { ProductService } from '../../services/product.service';
+import { OptionGroupService } from '../../services/option-group.service';
+import { OptionService } from '../../services/option.service';
+import { CategoryService } from '../../services/category.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-product',
@@ -31,7 +36,15 @@ export class ProductComponent implements OnInit {
   types: any[] = [ "Main", "Side", "Drink"];
   type: string[] = [];
   units: string[] = [ "g", "kg", "oz", "lb", "ml", "l", "cup", "tbsp", "tsp" ];
-  allIngredients: any[] = [];
+  allIngredients: {
+    id: number,
+    name: string,
+    description: string,
+    quantity: number,
+    photo: string,
+    productLink: string,
+    price: number
+  }[] = [];
   ingredients: { id: number, name: string, quantity: number, unit: string }[] = [];
   groups: {name: string, toppings: { 
     id: number, 
@@ -42,24 +55,21 @@ export class ProductComponent implements OnInit {
     maxQuantity: number, 
     priceAdjustment: number 
   }[]}[] = [];
-  allCategories: {id: number, name: string}[] = [ 
-    { id: 0, name: "Main" },
-    { id: 1, name: "Side" },
-    { id: 2, name: "Drink" },
-    { id: 3, name: "Dessert" },
-    { id: 4, name: "Appetizer" },
-    { id: 5, name: "Sauce" },
-    { id: 6, name: "Condiment" },
-    { id: 7, name: "Snack" },
-    { id: 8, name: "Other" }
-  ];
+  allCategories: {id: number, name: string, description: string}[] = [];
   categories: { id: number, name: string }[] = [];
 
   messageClass: string = "";
   message: string = "";
   editing: boolean = false;
 
-  constructor(private route: ActivatedRoute, private ingredientService: IngredientService) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private ingredientService: IngredientService,
+    private productService: ProductService,
+    private optionGroupService: OptionGroupService,
+    private optionService: OptionService,
+    private categoryService: CategoryService,
+  ) {}
 
   // If were editing a product get the values
   ngOnInit() {
@@ -80,7 +90,19 @@ export class ProductComponent implements OnInit {
       error: (error: any) => {
         console.error("Error fetching ingredients:", error);
       }
-  });
+    });
+
+    // Get the categories from the API
+    this.categoryService.getCategories().subscribe({
+      next: (data: any) => {
+        if (data.status === "success") {
+          this.allCategories = data.data;
+        }
+      },
+      error: (error: any) => {
+        console.error("Error fetching categories:", error);
+      }
+    });
   }
 
   // Notify the user of something
@@ -341,6 +363,137 @@ export class ProductComponent implements OnInit {
   deleteItem() {}
 
   // Save the product
-  saveItem() {}
+  async saveItem() {
+    try {
+      // Var to check if the product was created successfully
+      let created = true;
+
+      ////////////////////
+      // Create product //
+      ////////////////////
+      let product = {
+        name: this.name,
+        description: this.description,
+        photo: this.photo,
+        price: this.price,
+      };
+      let productId: number = -1;
+      const productResponse: any = await lastValueFrom(this.productService.createProduct(product)); 
+      if (productResponse.status !== "success") {
+        this.notify("Error creating product", "msg-error");
+        created = false;
+      } else {
+        productId = productResponse.data.id;
+      }
+
+      // If we failed to make a product then return
+      if (!created) return;
+
+
+      ///////////////////////////////////////
+      // Add the categories to the product //
+      ///////////////////////////////////////
+      this.categories.forEach(async category =>{
+        const categoryAddingResponse: any = await lastValueFrom(this.productService.addCategoryToProduct(productId, category.id));
+        if (categoryAddingResponse.status !== "success") {
+          this.notify("Error adding category to product", "msg-error");
+          created = false;
+        }
+      });
+
+      // If we failed to add the categories then return
+      if (!created) return;
+
+
+      //////////////////////////
+      // Create option groups //
+      //////////////////////////
+      this.groups.forEach(async group => {
+        // Create the group
+        let optionGroup = {
+          id: -1,
+          sectionName: group.name,
+          multipleChoice: false, 
+          productId: productId
+        }
+        const optionGroupCreation: any = await lastValueFrom(this.optionGroupService.createOptionGroup(optionGroup));
+        if (optionGroupCreation.status !== "success") {
+          this.notify("Error creating option group", "msg-error");
+          created = false;
+        } else {
+          optionGroup.id = optionGroupCreation.data.id;
+        }
+        
+        // Add the options
+        group.toppings.forEach(async topping => {
+          // Create a new option
+          let option = {
+            priceAdjustment: topping.priceAdjustment,
+            defaultQuantity: topping.defaultQuantity,
+            minQuantity: topping.minQuantity,
+            maxQuantity: topping.maxQuantity,
+            ingredientId: topping.id
+          }
+          const createOptionResponse: any = await lastValueFrom(this.optionService.createOption(option));
+          if (createOptionResponse.status !== "success") {
+            this.notify("Error creating option", "msg-error");
+            created = false;
+          } else {
+            topping.id = createOptionResponse.data.id;
+          }
+
+          // If we failed to create the option then return
+          if (!created) return;
+
+
+          // Add the option to the group
+          const addOptionToGroup: any = await lastValueFrom(this.optionGroupService.addOptionToOptionGroup(optionGroup.id, topping.id));
+          if (addOptionToGroup.status !== "success") {
+            this.notify("Error adding option to group", "msg-error");
+            created = false;
+          }
+
+          // If we failed to add the option to the group then return
+          if (!created) return;
+        });
+
+        // Link the option group to the product
+        const addOptionGroupToProductResponse: any = await lastValueFrom(this.productService.addOptionGroupToProduct(productId, optionGroup.id));
+        if (addOptionGroupToProductResponse.status !== "success") {
+          this.notify("Error adding option group to product", "msg-error");
+          created = false;
+        }
+      });
+
+
+      /////////////////////
+      // Add ingredients //
+      /////////////////////
+      this.ingredients.forEach(async ingredient => {
+        let data = {
+          id: ingredient.id,
+          quantity: ingredient.quantity,
+          measurement: ingredient.unit
+        }
+        const addIngredientToProductResponse: any = await lastValueFrom(this.productService.addIngredientToProduct(productId, data));
+        if (addIngredientToProductResponse.status !== "success") {
+          this.notify("Error adding ingredient to product", "msg-error");
+          created = false;
+        }
+
+        // If we failed to add the ingredient then return
+        if (!created) return;
+      });
+    } catch (error) {
+      console.error("Error saving product:", error);
+      this.notify("Error saving product", "msg-error");
+    }
+
+    /////////////////////////////////////////
+    // Inform user creation was successful //
+    /////////////////////////////////////////
+    this.notify("Product created successfully", "msg-success");
+  }
+
 
 }

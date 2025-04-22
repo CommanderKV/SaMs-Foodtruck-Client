@@ -3,6 +3,7 @@ import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-admin-menu',
@@ -14,10 +15,20 @@ export class AdminMenuComponent implements OnInit {
   searchItem: string = "";
   products: any[] = [];
 
-  constructor() {}
+  constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    
+    this.productService.getProducts().subscribe({
+      next: (data: any) => {
+        this.products = data.data.map((item: any) => {
+          item.display = true;
+          return item;
+        });
+      },
+      error: (error: any) => {
+        console.error("Error fetching products:", error);
+      }
+    });
   }
   
   // Search for an item in the menu
@@ -45,6 +56,6 @@ export class AdminMenuComponent implements OnInit {
   }
 
   editItem(id: string): void {
-
+    window.location.href = `/admin/product?id=${id}`;
   }
 }

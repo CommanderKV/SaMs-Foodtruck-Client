@@ -21,6 +21,10 @@
                         <label for="stock">Available stock</label>
                         <input type="number" id="stock" [(ngModel)]="availableStock" placeholder="0" min="0" readonly>
                     </fieldset>
+                    <fieldset>
+                        <label for="price">Price:</label>
+                        <input type="number" id="price" [(ngModel)]="price" placeholder="0.00" min="0" step="any" required>
+                    </fieldset>
                 </section>
                 <section class="right">
                     <fieldset id="product-types">

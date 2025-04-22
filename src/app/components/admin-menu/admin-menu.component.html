@@ -17,12 +17,51 @@
             <h1 *ngIf="products.length === 0">No menu items found</h1>
             <ng-container *ngFor="let item of products; let pos = index">
                 <div class="menu-item" *ngIf="item.display">
-                    <img [src]="'imgs/' + item.photo" alt="{{item.name}} image" class="item-img"/>
-                    <div class="item-details">
-                        
-                    </div>
-                    <div class="item-actions">
+                    <div class="item-info">
+                        <img [src]="'imgs/' + item.photo" alt="{{item.name}} image" class="item-img"/>
+                        <h2>{{item.name}}</h2>
+                        <p class="item-description">{{item.description}}</p>
                         <a class="btn" (click)="editItem(item.id)">Edit</a>
+                    </div>
+                    <div class="item-details">
+                        <h3>Details</h3>
+                        <div>
+                            <section>
+                                <h4>Price: <span>${{item.price}}</span></h4>
+                                <h4>Can be a meal? <span>{{item.canBeMeal ? 'Yes' : 'No'}}</span></h4>
+                                <div class="ingredients">
+                                    <h4>Required ingredients:</h4>
+                                    <ul>
+                                        <li *ngFor="let ingredient of item.ingredients">
+                                            <p>{{ingredient.quantity}} {{ingredient.measurement}} of {{ingredient.name}}</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <section>
+                                <div class="categories">
+                                    <h4>Categories:</h4>
+                                    <ul>
+                                        <li *ngFor="let category of item.categories">
+                                            {{category.name}}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4>Available toppings:</h4>
+                                    <ul>
+                                        <li *ngFor="let group of item.optionGroups">
+                                            <p>{{group.sectionName}}</p>
+                                            <ul>
+                                                <li *ngFor="let option of group.options">
+                                                    <p>{{option.ingredient.name}} <span>{{option.price}}</span></p>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </div>
             </ng-container>

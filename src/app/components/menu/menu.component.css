@@ -116,6 +116,7 @@
 }
 .menu-item-image {
     width: 50%;
+    max-width: 120px;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     overflow: hidden;

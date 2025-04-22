@@ -26,12 +26,12 @@ import { lastValueFrom } from 'rxjs';
 })
 export class ProductComponent implements OnInit {
   // Define the properties for the product
+  id: number = -1;
   name: string = "";
   description: string | undefined = undefined;
   photoUrl: string = "imgs/logo.png";
   photo: string | undefined = undefined;
   price: number | undefined = undefined;
-  availableStock: number = 0;
 
   types: any[] = [ "Main", "Side", "Drink"];
   type: string[] = [];
@@ -130,7 +130,64 @@ export class ProductComponent implements OnInit {
   }
 
   // Update the displayed values
-  getValues(id: string) {}
+  getValues(id: string) {
+    this.productService.getProductById(Number.parseInt(id)).subscribe({
+      next: (response: any) => {
+        if (response.status !== "success") {
+          this.notify("Error fetching product", "msg-error", true);
+          return;
+        }
+        let data = response.data;
+        this.id = data.id;
+        this.name = data.name;
+        this.description = data.description;
+        this.photoUrl = `imgs/${data.photo}`;
+        this.price = data.price;
+        if (data.ingredients) {
+          this.ingredients = data.ingredients.map((ingredient: any) => {
+            return {
+              id: ingredient.id,
+              name: ingredient.name,
+              quantity: ingredient.quantity,
+              unit: ingredient.measurement
+            }
+          });
+        }
+        if (data.categories) {
+          this.categories = data.categories.map((category: any) => {
+            return {
+              id: category.id,
+              name: category.name
+            }
+          });
+        }
+        if (data.optionGroups) {
+          this.groups = data.optionGroups.map((group: any) => {
+            return {
+              name: group.sectionName,
+              toppings: group.options.map((option: any) => {
+                return {
+                  id: option.ingredient.id,
+                  name: option.ingredient.name,
+                  included: false,
+                  minQuantity: option.minQuantity,
+                  defaultQuantity: option.defaultQuantity,
+                  maxQuantity: option.maxQuantity,
+                  priceAdjustment: option.priceAdjustment
+                }
+              })
+            }
+          });
+        }
+
+        this.editing = true;
+      },
+      error: (error: any) => {
+        console.error("Error fetching product:", error);
+        this.notify("Error fetching product", "msg-error", true);
+      }
+    });
+  }
 
   // Set the base64 string format of the image.
   setImage(data: string) {
@@ -360,7 +417,27 @@ export class ProductComponent implements OnInit {
   }
 
   // Delete the product
-  deleteItem() {}
+  deleteItem() {
+    // Confirm they want to delete the product
+    if (!confirm("Are you sure you want to delete this product?")) {
+      return;
+    }
+
+    // Delete the product
+    this.productService.deleteProduct(this.id).subscribe({
+      next: (response: any) => {
+        if (response.status !== "success") {
+          this.notify("Error deleting product", "msg-error");
+          return;
+        }
+        this.notify("Product deleted successfully", "msg-success", true);
+      },
+      error: (error: any) => {
+        console.error("Error deleting product:", error);
+        this.notify("Error deleting product", "msg-error");
+      }
+    });
+  }
 
   // Save the product
   async saveItem() {

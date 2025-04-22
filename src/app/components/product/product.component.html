@@ -18,10 +18,6 @@
                     </fieldset>
                     <app-photo-upload [photoURL]="photoUrl" (base64String)="setImage($event)"></app-photo-upload>
                     <fieldset>
-                        <label for="stock">Available stock</label>
-                        <input type="number" id="stock" [(ngModel)]="availableStock" placeholder="0" min="0" readonly>
-                    </fieldset>
-                    <fieldset>
                         <label for="price">Price:</label>
                         <input type="number" id="price" [(ngModel)]="price" placeholder="0.00" min="0" step="any" required>
                     </fieldset>

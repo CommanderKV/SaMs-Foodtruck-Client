@@ -19,6 +19,16 @@ export class ProductService {
     return this.http.get(`${this.serverUrl}/products`);
   }
 
+  // Method to get a product by ID
+  getProductById(id: number) {
+    return this.http.get(`${this.serverUrl}/products/${id}`);
+  }
+
+  // Delete a product by ID
+  deleteProduct(id: number) {
+    return this.http.delete(`${this.serverUrl}/products/delete/${id}`, { withCredentials: true });
+  }
+
   // Method to create a new product
   createProduct(product: any) {
     return this.http.post(`${this.serverUrl}/products/create`, product, { withCredentials: true });

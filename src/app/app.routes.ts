@@ -21,6 +21,7 @@ import { CreateIngredientComponent } from './components/create-ingredient/create
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { AdminMenuComponent } from './components/admin-menu/admin-menu.component';
 import { ProductComponent } from './components/product/product.component';
+import { AdminCategoriesComponent } from './components/admin-categories/admin-categories.component';
 
 /////////////////////////////////////////////
 //  Create the routes for the application  //
@@ -36,4 +37,5 @@ export const routes: Routes = [
     { path: "admin/ingredient", component: CreateIngredientComponent, canActivate: [AuthGuardService] },
     { path: "admin/menu", component: AdminMenuComponent, canActivate: [AuthGuardService] },
     { path: "admin/product", component: ProductComponent, canActivate: [AuthGuardService] },
+    { path: "admin/categories", component: AdminCategoriesComponent, canActivate: [AuthGuardService] },
 ];

@@ -21,8 +21,26 @@ export class OptionService {
     defaultQuantity: number,
     minQuantity: number,
     maxQuantity: number,
+    default: boolean,
     ingredientId: number,
   }) {
     return this.http.post(`${this.serverUrl}/options/create`, option, { withCredentials: true });
+  }
+
+  // Remove option
+  removeOption(optionId: number) {
+    return this.http.delete(`${this.serverUrl}/options/delete/${optionId}`, { withCredentials: true });
+  }
+
+  // Update option
+  updateOption(optionId: number, option: {
+    priceAdjustment: number, 
+    defaultQuantity: number,
+    minQuantity: number,
+    maxQuantity: number,
+    default: boolean,
+    ingredientId: number,
+  }) {
+    return this.http.put(`${this.serverUrl}/options/update/${optionId}`, option, { withCredentials: true });
   }
 }

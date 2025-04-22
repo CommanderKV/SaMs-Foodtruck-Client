@@ -25,4 +25,14 @@ export class OptionGroupService {
   addOptionToOptionGroup(optionGroupId: number, optionId: number) {
     return this.http.post(`${this.serverUrl}/optionGroups/${optionGroupId}/options`, { optionId: optionId }, { withCredentials: true });
   }
+
+  // Remove option group
+  removeOptionGroup(optionGroupId: number) {
+    return this.http.delete(`${this.serverUrl}/optionGroups/delete/${optionGroupId}`, { withCredentials: true });
+  }
+
+  // Update option group
+  updateOptionGroup(optionGroupId: number, optionGroup: { sectionName: string, multipleChoice: boolean, required: boolean }) {
+    return this.http.put(`${this.serverUrl}/optionGroups/update/${optionGroupId}`, optionGroup, { withCredentials: true });
+  }
 }

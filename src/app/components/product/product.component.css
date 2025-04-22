@@ -254,9 +254,12 @@ select {
     justify-content: center;
     width: 100%;
 }
-#toppings-table > tbody > tr > td:nth-child(1) > input {
-    width: 25%;
-    font-size: 1.5vw;
+#toppings-table > tbody > tr > td:nth-child(1) table {
+    width: 90%;
+    border-collapse: collapse;
+}
+#toppings-table > tbody > tr > td:nth-child(1) table > thead > tr > th:nth-child(1) {
+    width: 40%;
 }
 #toppings-table table > thead > tr th {
     font-size: 1.5vw;

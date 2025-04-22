@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <ul *ngIf="category.displayOptions">
-                        <li *ngFor="let item of category.items">
+                        <li class="category-item-product" *ngFor="let item of category.items">
                             <div>
                                 <img [src]="item.photo" alt="Image of a {{item.name}}"/>
                                 <h3>{{item.name}}</h3>

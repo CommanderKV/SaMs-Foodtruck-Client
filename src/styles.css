@@ -25,6 +25,17 @@ body {
     font-family: "Inter", sans-serif;
 }
 
+/* Disabling the scrollbar on everything */
+::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+
 .container-25-75 {
     position: absolute;
     top: 0;

@@ -100,8 +100,8 @@ export class CategoryComponent {
 
     // Create the category object
     let category = {
-      name: this.name,
-      description: this.description
+      name: this.name.charAt(0).toUpperCase() + this.name.slice(1),
+      description: this.description.charAt(0).toUpperCase() + this.description.slice(1),
     }
 
     // Create the category if not editing

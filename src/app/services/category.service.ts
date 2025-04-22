@@ -16,8 +16,18 @@ export class CategoryService {
     return this.http.get(`${this.serverUrl}/categories`);
   }
 
+  // Get a category by ID
+  getCategory(id: number) {
+    return this.http.get(`${this.serverUrl}/categories/${id}`);
+  }
+
   // Create a new category
   createCategory(category: { name: string, description: string}) {
     return this.http.post(`${this.serverUrl}/categories/create`, category, { withCredentials: true });
+  }
+
+  // Update an existing category
+  updateCategory(id: number, category: { name: string, description: string }) {
+    return this.http.put(`${this.serverUrl}/categories/update/${id}`, category, { withCredentials: true });
   }
 }

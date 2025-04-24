@@ -17,7 +17,7 @@ export class OptionGroupService {
   }
 
   // Create a new option group
-  createOptionGroup(optionGroup: { sectionName: string, multipleChoice: boolean, required: boolean, productId: number }) {
+  createOptionGroup(optionGroup: any) {
     return this.http.post(`${this.serverUrl}/optionGroups/create`, optionGroup, { withCredentials: true });
   }
 
@@ -26,8 +26,8 @@ export class OptionGroupService {
     return this.http.post(`${this.serverUrl}/optionGroups/${optionGroupId}/options`, { optionId: optionId }, { withCredentials: true });
   }
 
-  // Remove option group
-  removeOptionGroup(optionGroupId: number) {
+  // Delete option group
+  deleteOptionGroup(optionGroupId: number) {
     return this.http.delete(`${this.serverUrl}/optionGroups/delete/${optionGroupId}`, { withCredentials: true });
   }
 

@@ -49,29 +49,31 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let ingredient of ingredients; let pos = index">
-                                    <td>{{ingredient.name}}</td>
-                                    <td>
-                                        <div class="quantity-selector">
-                                            <a class="ingredient-btn" (click)="decreaseQuantity(pos)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                            </a>
-                                            <input class="quantity" type="number" min="0" step="any" value="{{ingredient.quantity}}" [(ngModel)]="ingredient.quantity" (blur)="setQuantity(ingredient.quantity, pos)">
-                                            <a class="ingredient-btn" (click)="increaseQuantity(pos)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <select [(ngModel)]="ingredient.unit">
-                                            <option value="">Select unit</option>
-                                            <option *ngFor="let unit of units" [value]="unit">{{unit}}</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <a class="btn" (click)="removeIngredient(pos)">-</a>
-                                    </td>
-                                </tr>
+                                <ng-container *ngFor="let ingredient of ingredients; let pos = index">
+                                    <tr *ngIf="!ingredient.remove">
+                                        <td>{{ingredient.name}}</td>
+                                        <td>
+                                            <div class="quantity-selector">
+                                                <a class="ingredient-btn" (click)="decreaseQuantity(pos)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                </a>
+                                                <input class="quantity" type="number" min="0" step="any" value="{{ingredient.quantity}}" [(ngModel)]="ingredient.quantity" (blur)="setQuantity(ingredient.quantity, pos)">
+                                                <a class="ingredient-btn" (click)="increaseQuantity(pos)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select [(ngModel)]="ingredient.unit">
+                                                <option value="">Select unit</option>
+                                                <option *ngFor="let unit of units" [value]="unit">{{unit}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="btn" (click)="removeIngredient(pos)">-</a>
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </tbody>
                         </table>
                         <select id="ingredientSelect" (change)="addIngredient($event)">
@@ -83,14 +85,16 @@
                         <label>Categories:</label>
                         <table id="categories-table">
                             <tbody>
-                                <tr *ngFor="let category of categories; let pos = index">
-                                    <td>
-                                        <h3>{{category.name}}</h3>
-                                    </td>
-                                    <td>
-                                        <a class="btn" (click)="removeCategory(pos)">-</a>
-                                    </td>
-                                </tr>
+                                <ng-container *ngFor="let category of categories; let pos = index">
+                                    <tr *ngIf="!category.remove">
+                                        <td>
+                                            <h3>{{category.name}}</h3>
+                                        </td>
+                                        <td>
+                                            <a class="btn" (click)="removeCategory(pos)">-</a>
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </tbody>
                         </table>
                         <select id="categorySelect" (change)="addCategory($event)">
@@ -104,100 +108,104 @@
                 <label>Toppings</label>
                 <table id="toppings-table" *ngIf="groups.length > 0">
                     <tbody>
-                        <tr *ngFor="let group of groups; let groupPos = index">
-                            <td>
-                                <table class="group-details">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Required</th>
-                                            <th>Multiple selection</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <input type="text" [(ngModel)]="group.name" placeholder="Group name" required>
-                                            </td>
-                                            <td>
-                                                <input type="checkbox" [(ngModel)]="group.required">
-                                            </td>
-                                            <td>
-                                                <input type="checkbox" [(ngModel)]="group.multiple">
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                            <td>
-                                <table *ngIf="group.toppings.length > 0">
-                                    <thead>
-                                        <tr>
-                                            <th>Topping</th>
-                                            <th>Included</th>
-                                            <th>Min quantity</th>
-                                            <th>Default quantity</th>
-                                            <th>Max quantity</th>
-                                            <th>Price/Topping</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let topping of group.toppings; let pos = index">
-                                            <td>{{topping.name}}</td>
-                                            <td>
-                                                <input type="checkbox" [(ngModel)]="topping.included">
-                                            </td>
-                                            <td>
-                                                <div class="quantity-selector">
-                                                    <a class="ingredient-btn" (click)="decreaseMinQuantity(groupPos, pos)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                                    </a>
-                                                    <input class="quantity" type="number" min="0" step="any" value="{{topping.minQuantity}}" [(ngModel)]="topping.minQuantity" (blur)="setMinQuantity(topping.minQuantity, groupPos, pos)">
-                                                    <a class="ingredient-btn" (click)="increaseMinQuantity(groupPos, pos)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="quantity-selector">
-                                                    <a class="ingredient-btn" (click)="decreaseDefaultQuantity(groupPos, pos)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                                    </a>
-                                                    <input class="quantity" type="number" min="0" step="any" value="{{topping.defaultQuantity}}" [(ngModel)]="topping.defaultQuantity" (blur)="setDefaultQuantity(groupPos, pos, topping.defaultQuantity)">
-                                                    <a class="ingredient-btn" (click)="increaseDefaultQuantity(groupPos, pos)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="quantity-selector">
-                                                    <a class="ingredient-btn" (click)="decreaseMaxQuantity(groupPos, pos)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                                    </a>
-                                                    <input class="quantity" type="number" min="0" step="any" value="{{topping.maxQuantity}}" [(ngModel)]="topping.maxQuantity" (blur)="setMaxQuantity(topping.maxQuantity, groupPos, pos)">
-                                                    <a class="ingredient-btn" (click)="increaseMaxQuantity(groupPos, pos)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="topping-price">
-                                                <input type="number" min="0" step="any" value="{{topping.priceAdjustment}}" [(ngModel)]="topping.priceAdjustment">
-                                            </td>
-                                            <td>
-                                                <a class="btn" (click)="removeTopping(groupPos, pos)">-</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <select id="toppingSelect" (change)="addTopping(groupPos, $event)">
-                                    <option value="">Add topping</option>
-                                    <option *ngFor="let topping of filteredToppings(groupPos)" [value]="topping.id">{{topping.name}}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <a class="btn" (click)="removeGroup(groupPos)">Remove Group</a>
-                            </td>
-                        </tr>
+                        <ng-container *ngFor="let group of groups; let groupPos = index">
+                            <tr *ngIf="!group.remove">
+                                <td>
+                                    <table class="group-details">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Required</th>
+                                                <th>Multiple selection</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" [(ngModel)]="group.name" placeholder="Group name" required>
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" [(ngModel)]="group.required">
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" [(ngModel)]="group.multiple">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table *ngIf="displayToppings(groupPos)">
+                                        <thead>
+                                            <tr>
+                                                <th>Topping</th>
+                                                <th>Included</th>
+                                                <th>Min quantity</th>
+                                                <th>Default quantity</th>
+                                                <th>Max quantity</th>
+                                                <th>Price/Topping</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngFor="let topping of group.toppings; let pos = index">
+                                                <tr *ngIf="!topping.remove">
+                                                    <td>{{topping.name}}</td>
+                                                    <td>
+                                                        <input type="checkbox" [(ngModel)]="topping.included">
+                                                    </td>
+                                                    <td>
+                                                        <div class="quantity-selector">
+                                                            <a class="ingredient-btn" (click)="decreaseMinQuantity(groupPos, pos)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                            </a>
+                                                            <input class="quantity" type="number" min="0" step="any" value="{{topping.minQuantity}}" [(ngModel)]="topping.minQuantity" (blur)="setMinQuantity(topping.minQuantity, groupPos, pos)">
+                                                            <a class="ingredient-btn" (click)="increaseMinQuantity(groupPos, pos)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="quantity-selector">
+                                                            <a class="ingredient-btn" (click)="decreaseDefaultQuantity(groupPos, pos)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                            </a>
+                                                            <input class="quantity" type="number" min="0" step="any" value="{{topping.defaultQuantity}}" [(ngModel)]="topping.defaultQuantity" (blur)="setDefaultQuantity(groupPos, pos, topping.defaultQuantity)">
+                                                            <a class="ingredient-btn" (click)="increaseDefaultQuantity(groupPos, pos)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="quantity-selector">
+                                                            <a class="ingredient-btn" (click)="decreaseMaxQuantity(groupPos, pos)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#c900ff" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                            </a>
+                                                            <input class="quantity" type="number" min="0" step="any" value="{{topping.maxQuantity}}" [(ngModel)]="topping.maxQuantity" (blur)="setMaxQuantity(topping.maxQuantity, groupPos, pos)">
+                                                            <a class="ingredient-btn" (click)="increaseMaxQuantity(groupPos, pos)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#cf00ff" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                    <td class="topping-price">
+                                                        <input type="number" min="0" step="any" value="{{topping.priceAdjustment}}" [(ngModel)]="topping.priceAdjustment">
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn" (click)="removeTopping(groupPos, pos)">-</a>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                    <select id="toppingSelect" (change)="addTopping(groupPos, $event)">
+                                        <option value="">Add topping</option>
+                                        <option *ngFor="let topping of filteredToppings(groupPos)" [value]="topping.id">{{topping.name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <a class="btn" (click)="removeGroup(groupPos)">Remove Group</a>
+                                </td>
+                            </tr>
+                        </ng-container>
                     </tbody>
                 </table>
                 <a class="btn" (click)="addGroup()">New Topping Group</a>

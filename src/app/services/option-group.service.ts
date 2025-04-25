@@ -21,11 +21,6 @@ export class OptionGroupService {
     return this.http.post(`${this.serverUrl}/optionGroups/create`, optionGroup, { withCredentials: true });
   }
 
-  // Add an option to an option group
-  addOptionToOptionGroup(optionGroupId: number, optionId: number) {
-    return this.http.post(`${this.serverUrl}/optionGroups/${optionGroupId}/options`, { optionId: optionId }, { withCredentials: true });
-  }
-
   // Delete option group
   deleteOptionGroup(optionGroupId: number) {
     return this.http.delete(`${this.serverUrl}/optionGroups/delete/${optionGroupId}`, { withCredentials: true });
@@ -34,5 +29,15 @@ export class OptionGroupService {
   // Update option group
   updateOptionGroup(optionGroupId: number, optionGroup: { sectionName: string, multipleChoice: boolean, required: boolean }) {
     return this.http.put(`${this.serverUrl}/optionGroups/update/${optionGroupId}`, optionGroup, { withCredentials: true });
+  }
+
+  // Add an option to an option group
+  addOptionToOptionGroup(optionGroupId: number, optionId: number) {
+    return this.http.post(`${this.serverUrl}/optionGroups/${optionGroupId}/options`, { optionId: optionId }, { withCredentials: true });
+  }
+
+  // Remove an option from an option group
+  removeOptionFromOptionGroup(optionGroupId: number, optionId: number) {
+    return this.http.delete(`${this.serverUrl}/optionGroups/${optionGroupId}/options/${optionId}`, { withCredentials: true });
   }
 }

@@ -183,7 +183,9 @@ export class ProductComponent implements OnInit {
               id: group.id,
               name: group.sectionName,
               remove: false,
-              toppings: group.options.map((option: any) => {
+              required: group.required == 1 ? true : false,
+              multiple: group.multipleChoice == 1 ? true : false,
+              toppings: group.options !== undefined ? group.options.map((option: any) => {
                 return {
                   id: option.ingredient.id,
                   name: option.ingredient.name,
@@ -194,7 +196,7 @@ export class ProductComponent implements OnInit {
                   priceAdjustment: option.priceAdjustment,
                   remove: false
                 }
-              })
+              }) : []
             }
           });
         }
@@ -211,20 +213,6 @@ export class ProductComponent implements OnInit {
   // Set the base64 string format of the image.
   setImage(data: string) {
     this.photo = data;
-  }
-
-  decreaseQuantity(pos: number) {
-    const ingredient = this.ingredients[pos];
-    if (ingredient.quantity > 0) {
-      ingredient.quantity--;
-    } else {
-      this.notify("Quantity cannot be less than 0", "msg-error");
-    }
-  }
-
-  increaseQuantity(pos: number) {
-    const ingredient = this.ingredients[pos];
-    ingredient.quantity++;
   }
 
   setQuantity(pos: number, quantity: number) {
@@ -351,7 +339,7 @@ export class ProductComponent implements OnInit {
         this.ingredients.push({ 
           id: Number.parseInt(id), 
           name: ingredient.name, 
-          quantity: 0, 
+          quantity: 1, 
           unit: "",
           remove: false
         });
@@ -370,6 +358,18 @@ export class ProductComponent implements OnInit {
 
     // Set the remove value to true
     ingredient.remove = true;
+  }
+  decreaseQuantity(pos: number) {
+    const ingredient = this.ingredients[pos];
+    if (ingredient.quantity - 1 <= 0) {
+      this.notify("Quantity cannot be less than or equal to 0", "msg-error");
+    } else {
+      ingredient.quantity--;
+    }
+  }
+  increaseQuantity(pos: number) {
+    const ingredient = this.ingredients[pos];
+    ingredient.quantity++;
   }
   get filteredIngredients() {
     return this.allIngredients.filter(ingredient => {
@@ -520,250 +520,456 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  // Save the product
-  async saveItem() {
-    try {
+  /////////////////////////
+  // Updating operations //
+  /////////////////////////
+  async updateProduct(): Promise<boolean> {
+    // Make the product data
+    let product = {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      photo: this.photo,
+      price: this.price
+    }
 
-      // Set the product
-      let product = {
-        id: this.id,
-        name: this.name,
-        description: this.description,
-        photo: this.photo,
-        price: this.price
-      };
+    // Update the product
+    const productResponse: any = await lastValueFrom(
+      this.productService.updateProduct(this.id, product)
+    );
+    if (productResponse.status !== "success") {
+      this.notify("Error updating product", "msg-error");
+      return false;
+    }
 
-      // Decided which command to use
-      if (this.editing) {
-        // Update the product
-        const productResponse: any = await lastValueFrom(this.productService.updateProduct(this.id, product));
-        if (productResponse.status !== "success") {
-          this.notify("Error updating product", "msg-error");
-          return;
-        }
-      } else {
-        // Save the product
-        const productResponse: any = await lastValueFrom(this.productService.createProduct(product));
-        if (productResponse.status !== "success") {
-          this.notify("Error creating product", "msg-error");
-          return;
-        }
-        // Set the product Id
-        this.id = productResponse.data.id;
+    return true;
+  }
+  async createProduct(): Promise<boolean> {
+    // Make the product data
+    let product = {
+      name: this.name,
+      description: this.description,
+      photo: this.photo,
+      price: this.price
+    }
+
+    // Create the product
+    const productResponse: any = await lastValueFrom(
+      this.productService.createProduct(product)
+    );
+    if (productResponse.status !== "success") {
+      this.notify("Error creating product", "msg-error");
+      return false;
+    }
+
+    // Set the ID of the product
+    this.id = Number.parseInt(productResponse.data.id);
+
+    // Return the product data
+    return true;
+  }
+  async updateIngredients(): Promise<boolean> {
+    for (const ingredient of this.ingredients) {
+      // Check details
+      if (ingredient.quantity <= 0) {
+        this.notify("Quantity cannot be less than or equal to 0", "msg-error");
+        return false;
+      } else if (ingredient.unit.length < 1) {
+        this.notify(`Unit for ${ingredient.name} must be filed`, "msg-error");
+        return false;
       }
 
-      /////////////////
-      // Ingredients //
-      /////////////////
-      this.ingredients.forEach(async ingredient => {
-        // Setup the ingredient data
-        let ingredientData = {
-          id: ingredient.id,
-          quantity: ingredient.quantity,
-          measurement: ingredient.unit
-        }
-
-        // Updating
-        if (this.editing) {
-          // Check if the ingredient is being removed
-          if (ingredient.remove) {
-            // Check if the ingredient was already in the product
-            const prevIngredient = this.beforeEdit.ingredients.find((item: any) => item.id === ingredient.id);
-            if (prevIngredient) {
-              // Remove the ingredient
-              const removeIngredientResponse: any = await lastValueFrom(
-                this.productService.removeIngredientFromProduct(this.id, ingredient.id)
-              );
-              if (removeIngredientResponse.status !== "success") {
-                this.notify("Error removing ingredient from product", "msg-error");
-              }
-            }
-          } else {
-            const updateIngredientResponse: any = await lastValueFrom(
-              this.productService.updateIngredientInProduct(this.id, ingredientData)
-            );
-            if (updateIngredientResponse.status !== "success") {
-              this.notify("Error updating ingredient in product", "msg-error");
-            }
+      // Check if the ingredient was already apart of the product
+      let prevIngredient = undefined;
+      if (this.beforeEdit.ingredients) {
+        prevIngredient = this.beforeEdit.ingredients.find((item: any) => item.id === ingredient.id);
+      }
+      
+      // Check if we need to remove the ingredient
+      if (ingredient.remove) {
+        if (prevIngredient) {
+          // Remove the ingredient
+          const removeIngredientResponse: any = await lastValueFrom(
+            this.productService.removeIngredientFromProduct(this.id, ingredient.id)
+          );
+          if (removeIngredientResponse.status !== "success") {
+            this.notify("Error removing ingredient from product", "msg-error");
+            return false;
           }
-        
-        // Saving
+        }
+      } else {
+        // Check if we need to update the ingredient
+        if (prevIngredient) {
+          // Update the ingredient
+          const updateIngredientResponse: any = await lastValueFrom(
+            this.productService.updateIngredientInProduct(this.id, {
+              id: ingredient.id,
+              quantity: ingredient.quantity,
+              measurement: ingredient.unit
+            })
+          );
+          if (updateIngredientResponse.status !== "success") {
+            this.notify("Error updating ingredient in product", "msg-error");
+            return false;
+          }
+
+        // We need to create add a new ingredient
         } else {
-          // Only add the ingredient if it was not removed
-          if (!ingredient.remove) {
-            const addIngredientResponse: any = await lastValueFrom(
-              this.productService.addIngredientToProduct(this.id, ingredientData)
-            );
-            if (addIngredientResponse.status !== "success") {
-              this.notify("Error adding ingredient to product", "msg-error");
-            }
+          // Add the ingredient
+          const addIngredientResponse: any = await lastValueFrom(
+            this.productService.addIngredientToProduct(this.id, {
+              id: ingredient.id,
+              quantity: ingredient.quantity,
+              measurement: ingredient.unit
+            })
+          );
+          if (addIngredientResponse.status !== "success") {
+            this.notify("Error adding ingredient to product", "msg-error");
+            return false;
           }
         }
-      });
+      }
+    }
 
+    // Return true if no errors occurred
+    return true;
+  }
+  async createIngredients(): Promise<boolean> {
+    for (const ingredient of this.ingredients) {
+      // Make sure the ingredient wasn't removed
+      if (!ingredient.remove) {
+        // Add the ingredient to the product
+        const addIngredientResponse: any = await lastValueFrom(
+          this.productService.addIngredientToProduct(this.id, {
+            id: ingredient.id,
+            quantity: ingredient.quantity,
+            measurement: ingredient.unit
+          })
+        );
+        if (addIngredientResponse.status !== "success") {
+          this.notify("Error adding ingredient to product", "msg-error");
+          return false;
+        }
+      }
+    }
 
-      ////////////////
-      // Categories //
-      ////////////////
-      this.categories.forEach(async category => {
-        // Updating
-        if (this.editing) {
-          // Being removed
-          if (category.remove) {
-            // Check if the category was already in the product
-            const prevCategory = this.beforeEdit.categories.find((item: any) => item.id === category.id);
-            if (prevCategory) {
-              // Remove the category
-              const removeCategoryResponse: any = await lastValueFrom(
-                this.productService.removeCategoryFromProduct(this.id, category.id)
-              );
-              if (removeCategoryResponse.status !== "success") {
-                this.notify("Error removing category from product", "msg-error");
-              }
-            }
+    return true;
+  }
+  async updateCategories(): Promise<boolean> {
+    for (const category of this.categories) {
+      // Check for existing category
+      let prevCategory = undefined;
+      if (this.beforeEdit.categories) {
+        prevCategory = this.beforeEdit.categories.find((item: any) => item.id === category.id);
+      }
+
+      // Check if we need to remove the category
+      if (category.remove) {
+        if (prevCategory) {
+          const removeResponse: any = await lastValueFrom(
+            this.productService.removeCategoryFromProduct(this.id, category.id)
+          );
+          if (removeResponse.status !== "success") {
+            this.notify("Error removing category from product", "msg-error");
+            return false;
+          }
+        }
+      } else {
+        if (!prevCategory) {
+          // Add the category to the product
+          const addResponse: any = await lastValueFrom(
+            this.productService.addCategoryToProduct(this.id, category.id)
+          );
+          if (addResponse.status !== "success") {
+            this.notify("Error adding category to product", "msg-error");
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+  async createCategories(): Promise<boolean> {
+    for (const category of this.categories) {
+      // Check if the category was removed
+      if (!category.remove) {
+        // Add the category to the product
+        const addResponse: any = await lastValueFrom(
+          this.productService.addCategoryToProduct(this.id, category.id)
+        );
+        if (addResponse.status !== "success") {
+          this.notify("Error adding category to product", "msg-error");
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+  async updateOptionGroups(): Promise<boolean> {
+    for (const group of this.groups) {
+      // Check if the group details are set
+      if (!group.name || group.name.length < 1) {
+        this.notify("Group name cannot be empty", "msg-error");
+        return false;
+      } else if (group.toppings.length < 1) {
+        this.notify("Group must have at least one topping", "msg-error");
+        return false;
+      }
+
+      // Check for prev group
+      let prevGroup = undefined;
+      if (this.beforeEdit.optionGroups) {
+        prevGroup = this.beforeEdit.optionGroups.find((item: any) => item.id === group.id);
+      }
+
+      if (group.remove) {
+        // Check if the group was already in the product
+        if (prevGroup) {
+          // Remove the option group from the product
+          const removeGroupResponse: any = await lastValueFrom(
+            this.productService.removeOptionGroup(this.id, group.id)
+          );
+          if (removeGroupResponse.status !== "success") {
+            this.notify("Error removing option group", "msg-error");
+            return false;
           }
 
-        // Saving
+          // Delete the option Group
+          const deleteGroupResponse: any = await lastValueFrom(
+            this.optionGroupService.deleteOptionGroup(group.id)
+          );
+          if (deleteGroupResponse.status !== "success") {
+            this.notify("Error deleting option group", "msg-error");
+            return false;
+          }
+        }
+      } else {
+        if (prevGroup) {
+          // Update the option group
+          const updateGroupResponse: any = await lastValueFrom(
+            this.optionGroupService.updateOptionGroup(group.id, {
+              sectionName: group.name,
+              multipleChoice: group.multiple,
+              required: group.required
+            })
+          );
+          if (updateGroupResponse.status !== "success") {
+            this.notify("Error updating option group", "msg-error");
+            return false;
+          }
+
+          // Update the options
+          if (!await this.updateOptions(group.id, group.toppings)) {
+            return false;
+          }
         } else {
-          if (!category.remove) {
-            const addCategoryResponse: any = await lastValueFrom(
-              this.productService.addCategoryToProduct(this.id, category.id)
-            );
-            if (addCategoryResponse.status !== "success") {
-              this.notify("Error adding category to product", "msg-error");
-            }
-          }
-        }
-      });
-
-
-      ////////////
-      // Groups //
-      ////////////
-      this.groups.forEach(async group => {
-        // Setup the group data
-        let groupData = {
-          id: group.id,
-          sectionName: group.name,
-          multipleChoice: group.multiple, 
-          required: group.required,
-        }
-
-        // Updating
-        if (this.editing) {
-          // Remove the group
-          if (group.remove) {
-            // Check if the group was already in the product
-            const prevGroup = this.beforeEdit.optionGroups.find((item: any) => item.id === group.id);
-            if (prevGroup) {
-              // Remove the option group from the product
-              const removeGroupResponse: any = await lastValueFrom(
-                this.productService.removeOptionGroup(this.id, group.id)
-              );
-              if (removeGroupResponse.status !== "success") {
-                this.notify("Error removing option group", "msg-error");
-              }
-
-              // Delete the option Group
-              const deleteGroupResponse: any = await lastValueFrom(
-                this.optionGroupService.deleteOptionGroup(group.id)
-              );
-              if (deleteGroupResponse.status !== "success") {
-                this.notify("Error deleting option group", "msg-error");
-              }
-            }
-
-          // Save the group
-          } else {
-            // Save the group
-            const updateGroupResponse: any = await lastValueFrom(
-              this.optionGroupService.updateOptionGroup(group.id, groupData)
-            );
-            if (updateGroupResponse.status !== "success") {
-              this.notify("Error updating option group", "msg-error");
-            }
-
-            // Save the toppings
-            group.toppings.forEach(async topping => {
-              // Setup the topping data
-              let toppingData = {
-                id: topping.id,
-                priceAdjustment: topping.priceAdjustment,
-                defaultQuantity: topping.defaultQuantity,
-                minQuantity: topping.minQuantity,
-                maxQuantity: topping.maxQuantity,
-                default: topping.included,
-                ingredientId: topping.id
-              }
-
-              // Update the option
-              const updateToppingResponse: any = await lastValueFrom(
-                this.optionService.updateOption(topping.id, toppingData)
-              );
-              if (updateToppingResponse.status !== "success") {
-                this.notify("Error updating option", "msg-error");
-              }
-            });
-          }
-
-        // Saving
-        } else {
-          // Create the group
+          // Create the option group
           const createGroupResponse: any = await lastValueFrom(
             this.optionGroupService.createOptionGroup({
-              ...groupData,
+              sectionName: group.name,
+              multipleChoice: group.multiple,
+              required: group.required,
               productId: this.id
             })
           );
           if (createGroupResponse.status !== "success") {
             this.notify("Error creating option group", "msg-error");
-            return;
+            return false;
           }
-          group.id = createGroupResponse.data.id;
 
-          // Save the toppings
-          group.toppings.forEach(async topping => {
-            if (!topping.remove) {
-              // Setup the topping data
-              let toppingData = {
-                priceAdjustment: topping.priceAdjustment,
-                defaultQuantity: topping.defaultQuantity,
-                minQuantity: topping.minQuantity,
-                maxQuantity: topping.maxQuantity,
-                default: topping.included,
-                ingredientId: topping.id
-              }
+          // Create the options
+          if (!await this.createOptions(group.toppings)) {
+            return false;
+          }
+        }
+      }
+    }
 
-              // Create the option
-              const createToppingResponse: any = await lastValueFrom(
-                this.optionService.createOption(toppingData)
-              );
-              if (createToppingResponse.status !== "success") {
-                this.notify("Error creating option", "msg-error");
-              } else {
-                topping.id = createToppingResponse.data.id;
-              }
+    return true;
+  }
+  async createOptionGroups(): Promise<boolean> {
+    for (const group of this.groups) {
+      // Check if the group was removed
+      if (!group.remove) {
+        // Create the option group
+        const createGroupResponse: any = await lastValueFrom(
+          this.optionGroupService.createOptionGroup({
+            sectionName: group.name,
+            multipleChoice: group.multiple,
+            required: group.required,
+            productId: this.id
+          })
+        );
+        if (createGroupResponse.status !== "success") {
+          this.notify("Error creating option group", "msg-error");
+          return false;
+        }
 
-              // Add the option to the group
-              const addOptionToGroupResponse: any = await lastValueFrom(
-                this.optionGroupService.addOptionToOptionGroup(group.id, topping.id)
-              );
-              if (addOptionToGroupResponse.status !== "success") {
-                this.notify("Error adding option to group", "msg-error");
+        // Create the options
+        if (!await this.createOptions(group.toppings)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+  async updateOptions(groupId: number, options: any[]): Promise<boolean> {
+    for (const option of options) {
+      // Check for existing option
+      let prevOption = undefined;
+      if (this.beforeEdit.optionGroups) {
+        options = this.beforeEdit.optionGroups.flatMap((group: any) => group.options);
+        if (options) {
+          prevOption = options.find((item: any) => item?.id === option.id);
+        }
+      }
+
+      // Check if we need to remove the option
+      if (option.remove) {
+        if (prevOption) {
+          // Remove the option from the group
+          const removeOptionResponse: any = await lastValueFrom(
+            this.optionGroupService.removeOptionFromOptionGroup(option.id, option.id)
+          );
+          if (removeOptionResponse.status !== "success") {
+            this.notify("Error removing option from group", "msg-error");
+            return false;
+          }
+        }
+      } else {
+        // Check if we need to update the option
+        if (prevOption) {
+          // Update the option
+          const updateOptionResponse: any = await lastValueFrom(
+            this.optionService.updateOption(option.id, {
+              priceAdjustment: option.priceAdjustment,
+              defaultQuantity: option.defaultQuantity,
+              minQuantity: option.minQuantity,
+              maxQuantity: option.maxQuantity,
+              default: option.included,
+              ingredientId: option.id
+            })
+          );
+          if (updateOptionResponse.status !== "success") {
+            this.notify("Error updating option in group", "msg-error");
+            return false;
+          }
+        } else {
+          // Create the option
+          const createOptionResponse: any = await lastValueFrom(
+            this.optionService.createOption({
+              priceAdjustment: option.priceAdjustment,
+              defaultQuantity: option.defaultQuantity,
+              minQuantity: option.minQuantity,
+              maxQuantity: option.maxQuantity,
+              default: option.included,
+              ingredientId: option.id
+            })
+          );
+          if (createOptionResponse.status !== "success") {
+            this.notify("Error creating option in group", "msg-error");
+            return false;
+          }
+
+          // Add the option to the group
+          const addOptionResponse: any = await lastValueFrom(
+            this.optionGroupService.addOptionToOptionGroup(groupId, createOptionResponse.data.id)
+          );
+          if (addOptionResponse.status !== "success") {
+            this.notify("Error adding option to group", "msg-error");
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+  async createOptions(options: any[]): Promise<boolean> {
+    for (const option of options) {
+      // Check if the option was removed
+      if (!option.remove) {
+        // Create the option
+        const createOptionResponse: any = await lastValueFrom(
+          this.optionService.createOption({
+            priceAdjustment: option.priceAdjustment,
+            defaultQuantity: option.defaultQuantity,
+            minQuantity: option.minQuantity,
+            maxQuantity: option.maxQuantity,
+            default: option.included,
+            ingredientId: option.id
+          })
+        );
+        if (createOptionResponse.status !== "success") {
+          this.notify("Error creating option in group", "msg-error");
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+
+
+  // Save the product
+  async saveItem() {
+    let failed = false;
+    try {
+      // Check product details
+      if (this.name === "") {
+        this.notify("Please enter a name for the product", "msg-error");
+        failed = true;
+        return;
+      } else if (this.description === "") {
+        this.notify("Please enter a description for the product", "msg-error");
+        failed = true;
+        return;
+      } else if (this.price === undefined || this.price < 0) {
+        this.notify("Please enter a valid price for the product", "msg-error");
+        failed = true;
+        return;
+      }
+
+      // Decided which command to use
+      if (this.editing) {
+        // Update the product
+        if (await this.updateProduct()) {
+          // Update the ingredients
+          if (await this.updateIngredients()) {
+            // Update the categories
+            if (await this.updateCategories()) {
+              // Update the option groups
+              if (await this.updateOptionGroups()) {
+                // Notify the user of success
+                this.notify("Product updated successfully", "msg-success", true);
               }
             }
-          });
+          }
         }
-      });
+
+      } else {
+        // Create the product
+        if (await this.createProduct()) {
+          // Create the ingredients
+          if (await this.createIngredients()) {
+            // Create the categories
+            if (await this.createCategories()) {
+              // Update the option groups
+              if (await this.createOptionGroups()) {
+                // Notify the user of success
+                this.notify("Product created successfully", "msg-success", true);
+              }
+            }
+          }
+        }
+      }
     } catch (error) {
       console.error("Error saving product:", error);
       this.notify("Error saving product", "msg-error");
     }
-
-    /////////////////////////////////////////
-    // Inform user creation was successful //
-    /////////////////////////////////////////
-    this.notify("Product created successfully", "msg-success", true);
   }
 
 

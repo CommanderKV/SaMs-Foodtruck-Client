@@ -27,7 +27,7 @@
     <section class="menu-section" *ngFor="let category of menuItems" >
         <h2>{{ category.category }}</h2>
         <ul [ngClass]="category.items.length <= 3 ? 'menu-items' : 'menu-items more-cols'">
-            <li class="menu-item" *ngFor="let item of category.items">
+            <li class="menu-item" *ngFor="let item of category.items" (click)="shopItem(item.id)">
                 <img class="menu-item-image" [src]="item.imageUrl" alt="{{ item.name }}" />
                 <div class="menu-item-details">
                     <div class="menu-item-title">

@@ -22,6 +22,7 @@ export class MenuComponent implements OnInit {
   menuItems: {
     category: string, 
     items: {
+      id: number,
       imageUrl: string, 
       name: string, 
       price: number, 
@@ -92,7 +93,8 @@ export class MenuComponent implements OnInit {
               imageUrl: `imgs/${product.photo}`,
               name: product.name,
               price: product.price,
-              description: product.description
+              description: product.description,
+              id: product.id
             });
           }
         }
@@ -114,5 +116,11 @@ export class MenuComponent implements OnInit {
         console.log("Error: " + error);
       }
     });
+  }
+
+
+  shopItem(id: number) {
+    // Redirect to the shop page with the item id
+    window.location.href = "/shop/" + id;
   }
 }

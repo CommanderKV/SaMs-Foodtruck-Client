@@ -62,7 +62,8 @@ export class ProductComponent implements OnInit {
       minQuantity: number, 
       defaultQuantity: number, 
       maxQuantity: number, 
-      priceAdjustment: number 
+      priceAdjustment: number,
+      ingredientId: number
     }[]
   }[] = [];
 
@@ -185,9 +186,9 @@ export class ProductComponent implements OnInit {
               remove: false,
               required: group.required == 1 ? true : false,
               multiple: group.multipleChoice == 1 ? true : false,
-              toppings: group.options !== undefined ? group.options.map((option: any) => {
+              toppings: group.options === undefined ? [] : group.options.map((option: any) => {
                 return {
-                  id: option.ingredient.id,
+                  id: option.id,
                   name: option.ingredient.name,
                   included: false,
                   minQuantity: option.minQuantity,
@@ -196,7 +197,7 @@ export class ProductComponent implements OnInit {
                   priceAdjustment: option.priceAdjustment,
                   remove: false
                 }
-              }) : []
+              })
             }
           });
         }
@@ -394,14 +395,15 @@ export class ProductComponent implements OnInit {
       const topping = this.allIngredients.find(topping => topping.id === Number.parseInt(id));
       if (topping) {
         this.groups[groupPos].toppings.push({ 
-          id: Number.parseInt(id), 
+          id: -1, 
           name: topping.name, 
           included: false,
           minQuantity: 0, 
           defaultQuantity: 0, 
           maxQuantity: 10, 
           priceAdjustment: 0,
-          remove: false
+          remove: false,
+          ingredientId: topping.id
         });
         input.value = ""; // Clear the input field
       } else {
@@ -570,15 +572,6 @@ export class ProductComponent implements OnInit {
   }
   async updateIngredients(): Promise<boolean> {
     for (const ingredient of this.ingredients) {
-      // Check details
-      if (ingredient.quantity <= 0) {
-        this.notify("Quantity cannot be less than or equal to 0", "msg-error");
-        return false;
-      } else if (ingredient.unit.length < 1) {
-        this.notify(`Unit for ${ingredient.name} must be filed`, "msg-error");
-        return false;
-      }
-
       // Check if the ingredient was already apart of the product
       let prevIngredient = undefined;
       if (this.beforeEdit.ingredients) {
@@ -598,6 +591,15 @@ export class ProductComponent implements OnInit {
           }
         }
       } else {
+        // Check details
+        if (ingredient.quantity <= 0) {
+          this.notify("Quantity cannot be less than or equal to 0", "msg-error");
+          return false;
+        } else if (ingredient.unit.length < 1) {
+          this.notify(`Unit for ${ingredient.name} must be filed`, "msg-error");
+          return false;
+        }
+
         // Check if we need to update the ingredient
         if (prevIngredient) {
           // Update the ingredient
@@ -638,6 +640,15 @@ export class ProductComponent implements OnInit {
     for (const ingredient of this.ingredients) {
       // Make sure the ingredient wasn't removed
       if (!ingredient.remove) {
+        // Check details
+        if (ingredient.quantity <= 0) {
+          this.notify("Quantity cannot be less than or equal to 0", "msg-error");
+          return false;
+        } else if (ingredient.unit.length < 1) {
+          this.notify(`Unit for ${ingredient.name} must be selected`, "msg-error");
+          return false;
+        }
+
         // Add the ingredient to the product
         const addIngredientResponse: any = await lastValueFrom(
           this.productService.addIngredientToProduct(this.id, {
@@ -708,16 +719,9 @@ export class ProductComponent implements OnInit {
     return true;
   }
   async updateOptionGroups(): Promise<boolean> {
+    let pos = -1;
     for (const group of this.groups) {
-      // Check if the group details are set
-      if (!group.name || group.name.length < 1) {
-        this.notify("Group name cannot be empty", "msg-error");
-        return false;
-      } else if (group.toppings.length < 1) {
-        this.notify("Group must have at least one topping", "msg-error");
-        return false;
-      }
-
+      pos++;
       // Check for prev group
       let prevGroup = undefined;
       if (this.beforeEdit.optionGroups) {
@@ -746,6 +750,12 @@ export class ProductComponent implements OnInit {
           }
         }
       } else {
+        // Check if the group details are set
+        if (!group.name || group.name.length < 1) {
+          this.notify("Group name cannot be empty", "msg-error");
+          return false;
+        }
+
         if (prevGroup) {
           // Update the option group
           const updateGroupResponse: any = await lastValueFrom(
@@ -780,7 +790,7 @@ export class ProductComponent implements OnInit {
           }
 
           // Create the options
-          if (!await this.createOptions(group.toppings)) {
+          if (!await this.createOptions(createGroupResponse.data.id, group.toppings)) {
             return false;
           }
         }
@@ -790,9 +800,17 @@ export class ProductComponent implements OnInit {
     return true;
   }
   async createOptionGroups(): Promise<boolean> {
+    let pos = -1;
     for (const group of this.groups) {
+      pos++;
       // Check if the group was removed
       if (!group.remove) {
+        // Check if the group details are set
+        if (!group.name || group.name.length < 1) {
+          this.notify("Group name cannot be empty", "msg-error");
+          return false;
+        }
+
         // Create the option group
         const createGroupResponse: any = await lastValueFrom(
           this.optionGroupService.createOptionGroup({
@@ -808,7 +826,7 @@ export class ProductComponent implements OnInit {
         }
 
         // Create the options
-        if (!await this.createOptions(group.toppings)) {
+        if (!await this.createOptions(createGroupResponse.data.id, group.toppings)) {
           return false;
         }
       }
@@ -821,10 +839,16 @@ export class ProductComponent implements OnInit {
       // Check for existing option
       let prevOption = undefined;
       if (this.beforeEdit.optionGroups) {
-        options = this.beforeEdit.optionGroups.flatMap((group: any) => group.options);
-        if (options) {
-          prevOption = options.find((item: any) => item?.id === option.id);
-        }
+        for (const group of this.beforeEdit.optionGroups) {
+          if (group.options === undefined) continue;
+          for (const optionData of group.options) {
+            if (optionData.id == option.id) {
+              prevOption = optionData;
+              break;
+            }
+          }
+          if (prevOption) break;
+        }     
       }
 
       // Check if we need to remove the option
@@ -832,10 +856,19 @@ export class ProductComponent implements OnInit {
         if (prevOption) {
           // Remove the option from the group
           const removeOptionResponse: any = await lastValueFrom(
-            this.optionGroupService.removeOptionFromOptionGroup(option.id, option.id)
+            this.optionGroupService.removeOptionFromOptionGroup(groupId, option.id)
           );
           if (removeOptionResponse.status !== "success") {
             this.notify("Error removing option from group", "msg-error");
+            return false;
+          }
+
+          // Remove the option
+          const removeResponse: any = await lastValueFrom(
+            this.optionService.removeOption(option.id)
+          );
+          if (removeResponse.status !== "success") {
+            this.notify("Error removing option", "msg-error");
             return false;
           }
         }
@@ -850,7 +883,7 @@ export class ProductComponent implements OnInit {
               minQuantity: option.minQuantity,
               maxQuantity: option.maxQuantity,
               default: option.included,
-              ingredientId: option.id
+              ingredientId: option.ingredientId
             })
           );
           if (updateOptionResponse.status !== "success") {
@@ -866,7 +899,7 @@ export class ProductComponent implements OnInit {
               minQuantity: option.minQuantity,
               maxQuantity: option.maxQuantity,
               default: option.included,
-              ingredientId: option.id
+              ingredientId: option.ingredientId
             })
           );
           if (createOptionResponse.status !== "success") {
@@ -887,7 +920,7 @@ export class ProductComponent implements OnInit {
     }
     return true;
   }
-  async createOptions(options: any[]): Promise<boolean> {
+  async createOptions(groupId: number, options: any[]): Promise<boolean> {
     for (const option of options) {
       // Check if the option was removed
       if (!option.remove) {
@@ -899,11 +932,20 @@ export class ProductComponent implements OnInit {
             minQuantity: option.minQuantity,
             maxQuantity: option.maxQuantity,
             default: option.included,
-            ingredientId: option.id
+            ingredientId: option.ingredientId
           })
         );
         if (createOptionResponse.status !== "success") {
           this.notify("Error creating option in group", "msg-error");
+          return false;
+        }
+
+        // Add the option to the group
+        const addOptionResponse: any = await lastValueFrom(
+          this.optionGroupService.addOptionToOptionGroup(groupId, createOptionResponse.data.id)
+        );
+        if (addOptionResponse.status !== "success") {
+          this.notify("Error adding option to group", "msg-error");
           return false;
         }
       }

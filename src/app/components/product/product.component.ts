@@ -958,20 +958,16 @@ export class ProductComponent implements OnInit {
 
   // Save the product
   async saveItem() {
-    let failed = false;
     try {
       // Check product details
       if (this.name === "") {
         this.notify("Please enter a name for the product", "msg-error");
-        failed = true;
         return;
       } else if (this.description === "") {
         this.notify("Please enter a description for the product", "msg-error");
-        failed = true;
         return;
       } else if (this.price === undefined || this.price < 0) {
         this.notify("Please enter a valid price for the product", "msg-error");
-        failed = true;
         return;
       }
 

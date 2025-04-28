@@ -121,6 +121,6 @@ export class MenuComponent implements OnInit {
 
   shopItem(id: number) {
     // Redirect to the shop page with the item id
-    window.location.href = "/shop/" + id;
+    window.location.href = `/shop?id=${id}`;
   }
 }

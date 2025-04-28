@@ -23,6 +23,7 @@ import { AdminMenuComponent } from './components/admin-menu/admin-menu.component
 import { ProductComponent } from './components/product/product.component';
 import { AdminCategoriesComponent } from './components/admin-categories/admin-categories.component';
 import { CategoryComponent } from './components/category/category.component';
+import { ShopComponent } from './components/shop/shop.component';
 
 /////////////////////////////////////////////
 //  Create the routes for the application  //
@@ -32,6 +33,7 @@ export const routes: Routes = [
     { path: "cart", component: CartComponent },
     { path: "login", component: LoginComponent },
     { path: "menu", component: MenuComponent },
+    { path: "shop", component: ShopComponent },
     { path: "dashboard", component: DashboardComponent },
     { path: "admin", component: AdminComponent, canActivate: [AuthGuardService] },
     { path: "admin/invin", component: InventoryComponent, canActivate: [AuthGuardService], canDeactivate: [unsavedChangesGuard] },

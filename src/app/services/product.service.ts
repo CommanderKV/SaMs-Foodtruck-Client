@@ -3,6 +3,58 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 
+// Define the response type from the API
+export type productType =  {
+  status: string,
+  data: {
+    id: number,
+    name: string,
+    description: string,
+    photo: string,
+    price: number,
+    ingredients: productIngredientType[],
+    categories: productCategoryType[] | undefined,
+    optionGroups: productOptionGroupsType[] | undefined
+  }
+};
+export type productIngredientType = {
+  id: number,
+  name: string,
+  description: string,
+  quantity: number,
+  measurement: string,
+  price: number,
+  photo: string,
+};
+export type productCategoryType = {
+  id: number,
+  name: string,
+  description: string
+};
+export type productOptionGroupsType = {
+  id: number,
+  sectionName: string,
+  multipleChoice: boolean,
+  required: boolean,
+  options: productOptionGroupsOptionType[]
+};
+
+export type productOptionGroupsOptionType = {
+  id: number,
+  priceAdjustment: number,
+  multipleChoice: boolean,
+  minQuantity: number,
+  maxQuantity: number,
+  default: boolean,
+  ingredient: {
+    id: number,
+    name: string,
+    description: string,
+    price: number,
+    photo: string
+  }
+};
+
 @Injectable({
   providedIn: 'root'
 })

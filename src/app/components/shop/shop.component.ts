@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NavComponent } from "../nav/nav.component";
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService, productType } from '../../services/product.service';
 
 @Component({
   selector: 'app-shop',
-  imports: [ NavComponent, FormsModule, NgFor, ],
+  imports: [ NavComponent, FormsModule, NgFor, NgIf ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css'
 })
@@ -25,7 +25,11 @@ export class ShopComponent implements OnInit {
       name: string,
       price: number,
       selected: boolean,
-    }[]
+      quantity: number,
+      maxQuantity: number,
+      minQuantity: number,
+    }[],
+    selectedItem: number | null
   }[] = [];
 
   constructor(
@@ -78,12 +82,17 @@ export class ShopComponent implements OnInit {
                   name: string,
                   price: number,
                   selected: boolean,
-                }[]
+                  quantity: number,
+                  maxQuantity: number,
+                  minQuantity: number,
+                }[],
+                selectedItem: number | null
               } = {
                 title: optionGroup.sectionName,
                 multipleChoice: optionGroup.multipleChoice,
                 required: optionGroup.required,
-                items: []
+                items: [],
+                selectedItem: null
               };
 
               // Set the options in the optionGroup
@@ -91,7 +100,10 @@ export class ShopComponent implements OnInit {
                 const item = {
                   name: option.ingredient.name,
                   price: option.priceAdjustment,
-                  selected: option.default
+                  selected: option.default,
+                  quantity: option.defaultQuantity,
+                  maxQuantity: option.maxQuantity,
+                  minQuantity: option.minQuantity,
                 };
 
                 // Add the option to the group

@@ -22,9 +22,15 @@
         <li class="product-detail" *ngFor="let details of productDetails">
             <h3 class="text-red">{{details.title}}</h3>
             <ul class="product-detail-list">
-                <li class="product-detail-item" *ngFor="let item of details.items">
-                    <label class="product-detail-item-title">{{item.name}} <span class="price">{{item.price}}</span></label>
-                    <input type="{{details.multipleChoice ? 'checkbox' : 'radio'}}" [ngModel]="item.selected" />
+                <li class="product-detail-item" *ngFor="let item of details.items; let pos = index">
+                    <label class="product-detail-item-title">{{item.name}} <span class="price">${{item.price}}</span></label>
+                    <input *ngIf="details.multipleChoice" name="{{details.title}}" type="checkbox" [ngModel]="item.selected" /> 
+                    <input *ngIf="!details.multipleChoice" name="{{details.title}}" type="radio" [ngModel]="details.selectedItem" value="{{pos}}" />
+                    <select [(ngModel)]="item.quantity" [disabled]="!item.selected">
+                        <ng-container *ngFor="let pos of [].constructor(item.maxQuantity - item.minQuantity + 1); let i = index">
+                            <option [value]="item.minQuantity + i" [selected]="item.quantity === item.minQuantity + i">{{item.minQuantity + i}}</option>
+                        </ng-container>
+                    </select>
                 </li>
             </ul>
         </li>

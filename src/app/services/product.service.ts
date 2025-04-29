@@ -45,6 +45,7 @@ export type productOptionGroupsOptionType = {
   multipleChoice: boolean,
   minQuantity: number,
   maxQuantity: number,
+  defaultQuantity: number,
   default: boolean,
   ingredient: {
     id: number,

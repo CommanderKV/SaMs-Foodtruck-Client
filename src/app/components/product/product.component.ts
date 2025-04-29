@@ -963,7 +963,7 @@ export class ProductComponent implements OnInit {
       if (this.name === "") {
         this.notify("Please enter a name for the product", "msg-error");
         return;
-      } else if (this.description === "") {
+      } else if (this.description === "" || this.description === undefined) {
         this.notify("Please enter a description for the product", "msg-error");
         return;
       } else if (this.price === undefined || this.price < 0) {

@@ -126,4 +126,19 @@ export class ShopComponent implements OnInit {
     });
   }
 
+  // Check if the product is selected
+  isSelected(detailPos: number, itemPos: number): boolean {
+    // Get the details pos
+    const detail = this.productDetails[detailPos];
+
+    // Get the item pos
+    const item = detail.items[itemPos];
+
+    // Check if the detail is selected
+    if (detail.selectedItem == itemPos || item.selected) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

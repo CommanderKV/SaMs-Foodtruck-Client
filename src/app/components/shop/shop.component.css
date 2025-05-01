@@ -9,11 +9,8 @@
     align-items: flex-start;
 }
 .header .details {
-    font-size: 2.5vw;
+    font-size: 2vw;
     font-weight: bold;
-}
-.header .details.sml {
-    font-size: 1.5vw;
 }
 .overlay-fade-down {
     position: absolute;
@@ -66,18 +63,111 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.header .location {
+
+.price {
+    font-size: 1vw;
+    color: #8D8B8F;
+    padding: 0;
+    margin: 0;
+}
+.text-red {
+    color: #DA0000;
+    font-weight: bold;
+}
+
+.container {
     display: flex;
-    position: relative;
-    align-self: start;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
 }
-.header .location svg {
-    width: 1.5vw;
-    height: auto;
-    margin-left: 1%;
-    margin-right: 2px;
+.container h3 {
+    font-size: 2vw;
 }
-.header .location .location-text {
-    color: #C900FF;
-} 
+
+.product-details {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(20vw, 1fr));
+
+    gap: 20px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+
+    list-style: none;
+    overflow-y: auto;
+}
+.product-detail {
+    width: 20vw;
+}
+.product-detail h3 {
+    font-size: 2vw;
+    margin: 0;
+    padding: 0;
+}
+.product-detail-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.product-detail-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.product-detail-item > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+.product-detail-item-title {
+    font-size: 1.5vw;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 0;
+    border-color: #C900FF;
+    border-width: 3px;
+    border-style: solid;
+
+    background-color: transparent;
+    cursor: pointer;
+}
+input[type="checkbox"]:checked {
+    background-color: #C900FF;
+}
+input[type="radio"] {
+    border-radius: 50%;
+}
+input[type="radio"]:checked {
+    background-color: #C900FF;
+}
+
+select {
+    /* appearance: none; */
+    width: 50px;
+    padding: 3px 0px;
+
+    border-radius: 0;
+    border-width: 3px;
+    border-color: #C900FF;
+    border-style: solid;
+}
+select:disabled {
+    background-color: #8D8B8F;
+    border-color: #8D8B8F;
+    color: #B8B8B8;
+    cursor: not-allowed;
+}

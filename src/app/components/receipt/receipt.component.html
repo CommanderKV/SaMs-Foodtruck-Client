@@ -1,0 +1,40 @@
+<div id="receipt">
+    <h1 *ngIf="!final">Subtotal</h1>
+    <h1 *ngIf="final">Total</h1>
+    <ul class="items">
+        <li *ngFor="let item of items" class="item">
+            <h3 class="item-name">{{item.name}}<span class="price">${{item.price}}</span></h3>
+            <ul>
+                <li *ngFor="let detail of item.details">
+                    <h4>{{detail.title}}</h4>
+                    <ul *ngIf="detail.items">
+                        <li *ngFor="let subItem of detail.items" class="sub-item">
+                            <h4>{{subItem.name}}</h4>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div class="line"></div>
+    <div class="total">
+        <ng-container *ngIf="final">
+            <div>
+                <h2 class="text">Pre-Tax total</h2>
+                <h2 class="text-price">${{preTaxTotal}}</h2>
+            </div>
+            <div>
+                <h2 class="text">Taxes</h2>
+                <h2 class="text-price">${{taxes}}</h2>
+            </div>
+            <div>
+                <h2 class="total-text">Total</h2>
+                <h2 class="text-price">${{totalPrice}}</h2>
+            </div>
+        </ng-container>
+        <div *ngIf="!final">
+            <h2 class="total-text">Subtotal</h2>
+            <h2 class="total-price">${{totalPrice}}</h2>
+        </div>
+    </div>
+</div>

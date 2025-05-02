@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService, productType } from '../../services/product.service';
+import { ReceiptComponent, ReceiptType } from "../receipt/receipt.component";
 
 @Component({
   selector: 'app-shop',
-  imports: [ NavComponent, FormsModule, NgFor, NgIf ],
+  imports: [NavComponent, FormsModule, NgFor, NgIf, ReceiptComponent],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css'
 })
@@ -28,9 +29,22 @@ export class ShopComponent implements OnInit {
       quantity: number,
       maxQuantity: number,
       minQuantity: number,
+      subDetails: {
+        name: string,
+        price: number,
+        selected: boolean,
+        quantity: number,
+        maxQuantity: number,
+        minQuantity: number
+      }[] | null
     }[],
     selectedItem: number | null
   }[] = [];
+  orderData: { 
+    receipt: ReceiptType, 
+    final: boolean 
+  } | undefined = undefined;
+  quantity: number = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +58,9 @@ export class ShopComponent implements OnInit {
       if (id) {
         // Get the data from the API
         this.getValues(Number.parseInt(id));
+
+        // Update the receipt
+        this.updateReceipt();
       
       // Navigate back to the menu page if no ID is found
       } else {
@@ -85,6 +102,14 @@ export class ShopComponent implements OnInit {
                   quantity: number,
                   maxQuantity: number,
                   minQuantity: number,
+                  subDetails: {
+                    name: string,
+                    price: number,
+                    selected: boolean,
+                    quantity: number,
+                    maxQuantity: number,
+                    minQuantity: number
+                  }[] | null
                 }[],
                 selectedItem: number | null
               } = {
@@ -104,6 +129,7 @@ export class ShopComponent implements OnInit {
                   quantity: option.defaultQuantity,
                   maxQuantity: option.maxQuantity,
                   minQuantity: option.minQuantity,
+                  subDetails: null
                 };
 
                 // Add the option to the group
@@ -139,6 +165,67 @@ export class ShopComponent implements OnInit {
       return true;
     } else {
       return false;
+    }
+  }
+
+  // Update the receipt
+  updateReceipt() {
+    let receipt: ReceiptType = {
+      name: this.productTitle,
+      price: this.productPrice,
+      quantity: this.quantity,
+      details: []
+    }
+    // Go through each product detail
+    for (const product of this.productDetails) {
+      let pos = 0;
+      // Go through each item in the product details
+      for (const item of product.items) {
+        if (!item.selected || product.selectedItem != pos) {
+          pos++;
+          continue;
+        }
+
+        // Set the item details
+        let itemDetail = {
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity ? 1 : item.quantity,
+          subDetails: [] as {
+            name: string,
+            price: number,
+            quantity: number
+          }[]
+        }
+
+        // Check if there are any sub items
+        if (item.subDetails) {
+          for (const subItem of item.subDetails) {
+            // Check if the sub item is selected
+            if (subItem.selected) {
+              // Set the sub item details
+              let subItemDetail = {
+                name: subItem.name,
+                price: subItem.price,
+                quantity: subItem.quantity ? 1 : subItem.quantity
+              }
+
+              // Add the sub item to the item details
+              itemDetail.subDetails.push(subItemDetail);
+            }
+          }
+        }
+
+        // Add the item details to the receipt
+        receipt.details.push(itemDetail);
+        pos++;
+      }
+    }
+
+    // Set the order data
+    this.orderData = {
+      receipt: receipt,
+      final: false
     }
   }
 }
